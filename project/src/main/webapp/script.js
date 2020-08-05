@@ -9,6 +9,18 @@ function loadLoginLogoutButton() {
     });
 }
 
+function setUserDetails(user_details)
+{
+    fetch('/user')
+    .then(response => response.json())
+    .then(user_details =>
+    {
+        console.log(user_details);
+    });
+    console.log(user_details.email);
+}
+
+
 function loggedInView(status){
     let loggedinSay = document.createElement('p');
     loggedinSay.innerHTML = 'You are logged in as <strong>';
