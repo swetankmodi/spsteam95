@@ -27,7 +27,7 @@ public class LoginStatusServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JSONObject status = new JSONObject();
-    
+
         UserService userService = UserServiceFactory.getUserService();
         if (userService.isUserLoggedIn()) {
             status.put("logged_in", true);
@@ -48,7 +48,7 @@ public class LoginStatusServlet extends HttpServlet {
                             .set("email", userEmail)
                             .set("phone", 0L)
                             .set("rating", 5.0)
-                            .build();
+                                        .build();
                 datastore.put(userEntity);
             }
         } else {
