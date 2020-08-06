@@ -1,35 +1,36 @@
 package com.google.sps.servlets;
 
-// import com.google.appengine.api.datastore.DatastoreService;
-// import com.google.appengine.api.datastore.DatastoreServiceFactory;
-// import com.google.appengine.api.datastore.Entity;
-// import com.google.appengine.api.datastore.PreparedQuery;
-// import com.google.appengine.api.datastore.Query;
-// import com.google.appengine.api.datastore.Query.SortDirection;
-// import com.google.appengine.api.users.UserService;
-// import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 // import com.google.gson.Gson;
 // import com.google.sps.data.Comment;
-// import java.io.IOException;
+import java.io.IOException;
 // import java.util.ArrayList;
 // import java.util.List;
-// import javax.servlet.annotation.WebServlet;
-// import javax.servlet.http.HttpServlet;
-// import javax.servlet.http.HttpServletRequest;
-// import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
 /** Servlet facilitating creation of tasks. */
 @WebServlet("/task/create")
-public class TasksServlet extends HttpServlet {
+public class TaskCreateServlet extends HttpServlet {
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    RequestDispatcher view = req.getRequestDispatcher("/task_create.html");
-    view.forward(request, response);
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    request.getRequestDispatcher("/task_create.html").forward(request, response);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    /* TODO: Add user service part after completion of login pipeline
     UserService userService = UserServiceFactory.getUserService();
     
     // If not logged in, do not create new task
@@ -39,6 +40,7 @@ public class TasksServlet extends HttpServlet {
 
     // Get User details
     String userEmail = userService.getCurrentUser().getEmail();
+    */
 
     /*// Get the input from the form.
     String commentText = getParameter(request, "comment", "");*/
