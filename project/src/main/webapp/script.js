@@ -9,7 +9,7 @@ function loadLoginLogoutButton() {
     });
 }
 
-function setUserDetails(user_details)
+function setUserDetails()
 {
     fetch('/user')
     .then(response => response.json())
@@ -17,7 +17,6 @@ function setUserDetails(user_details)
     {
         console.log(user_details);
     });
-    console.log(user_details.email);
 }
 
 
