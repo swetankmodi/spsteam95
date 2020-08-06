@@ -24,7 +24,8 @@ import javax.servlet.ServletException;
 public class TaskCreateServlet extends HttpServlet {
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
     request.getRequestDispatcher("/task_create.html").forward(request, response);
   }
 
