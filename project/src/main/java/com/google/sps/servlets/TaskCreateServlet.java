@@ -9,7 +9,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 // import com.google.gson.Gson;
-// import com.google.sps.data.Comment;
+import com.google.sps.data.Task;
 import java.io.IOException;
 // import java.util.ArrayList;
 // import java.util.List;
@@ -47,17 +47,25 @@ public class TaskCreateServlet extends HttpServlet {
     String commentText = getParameter(request, "comment", "");*/
 
     // TODO: add checks to task details coming from client
-    //long timestamp = System.currentTimeMillis();
 
     // Form Entity
     Entity taskEntity = new Entity("Task");
-    taskEntity.setProperty("title", "Title 1");
-    taskEntity.setProperty("details", "Any details");
+    Task task = new Task(taskEntity.getKey().getId(),
+      getParameter(request, "title", ""),
+      getParameter(request, "details", ""),
+      Long.parseLong(getParameter(request, "compensation", "0")),
+      -1, /* TODO: Creator Id: update after login pipeline is complete */
+      getParameter(request, "address", "")
+    );
+    if (!setTaskEntityProperties(task, taskEntity)) {
+      return;
+    }
 
     // Store in Datastore
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(taskEntity);
 
+    // TODO: Redirect to Task View after creation of task to view the created task
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
   }
@@ -77,6 +85,25 @@ public class TaskCreateServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
+  }
+
+  private boolean setTaskEntityProperties (Task task, Entity taskEntity) {
+    if ((!taskEntity.getKind().equals("Task"))
+        || (taskEntity.getKey().getId() != task.getId())) {
+      return false;
+    }
+
+    taskEntity.setProperty("title", task.getTitle());
+    taskEntity.setProperty("details", task.getDetails());
+    taskEntity.setProperty("creationTime", task.getCreationTime());
+    taskEntity.setProperty("compensation", task.getCompensation());
+    taskEntity.setProperty("creatorId", task.getCreatorId());
+    taskEntity.setProperty("address", task.getAddress());
+    taskEntity.setProperty("assigned", task.isAssigned());
+    taskEntity.setProperty("assigneeId", task.getAssigneeId());
+    taskEntity.setProperty("completionRating", task.getCompletionRating());
+    taskEntity.setProperty("active", task.isActive());
+    return true;
   }
 }
 

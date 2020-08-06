@@ -121,11 +121,6 @@ deactivateTask(id)
     this.address = address;
   }
 
-  /** Sets the Task Assignee's User ID. */
-  public void setAssigneeId(long assigneeId) {
-    this.assigneeId = assigneeId;
-  }
-
   /** Sets the Task Completion Rating. */
   public void setCompletionRating(float completionRating) {
     this.completionRating = completionRating;
