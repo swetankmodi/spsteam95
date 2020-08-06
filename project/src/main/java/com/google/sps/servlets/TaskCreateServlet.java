@@ -87,6 +87,13 @@ public class TaskCreateServlet extends HttpServlet {
     return value;
   }
 
+  /**
+   * Sets the properties of Task Entity from the corresponding Task Object.
+   *
+   * @param task The task object.
+   * @param taskEntity The Entity of kind Task where details are to be updated.
+   * @return True on succesful update. False, otherwise.
+   */
   private boolean setTaskEntityProperties (Task task, Entity taskEntity) {
     if ((!taskEntity.getKind().equals("Task"))
         || (taskEntity.getKey().getId() != task.getId())) {
@@ -105,5 +112,6 @@ public class TaskCreateServlet extends HttpServlet {
     taskEntity.setProperty("active", task.isActive());
     return true;
   }
+
 }
 

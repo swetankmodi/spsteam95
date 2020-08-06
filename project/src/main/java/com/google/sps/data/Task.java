@@ -3,14 +3,15 @@ package com.google.sps.data;
 /** A Task. */
 public final class Task {
 
-/*endDate, appliedUsersList
-Functions:
-createTask(title, details, creationTime, endDate, cost)
-addApplicant(id, appliedUsersList)
-assignTaskToUser(id, assignedTo, active)
-rateTaskAssignee(id, completionRating)
-deactivateTask(id)
-*/
+  /*
+   * TODO:
+   * add deadline (property)
+   * add functions:
+   *  addApplicant(id, appliedUsersList)
+   *  assignTaskToUser(id, assignedTo, active)
+   *  rateTaskAssignee(id, completionRating)
+   *  deactivateTask(id)
+   */
 
   private final long id;
   private String title;
