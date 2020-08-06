@@ -33,6 +33,7 @@ public class UserDetailsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Gson gson = new Gson();
         JSONObject user_details = new JSONObject();
+
         UserService userService = UserServiceFactory.getUserService();
         String email = userService.getCurrentUser().getEmail();
         Query query = new Query("User");
@@ -42,7 +43,6 @@ public class UserDetailsServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);
         Entity entity = new Entity("User");
-        entity = pq.asSingleEntity();
         user_details.put("name", entity.getProperty("name"));
         user_details.put("email", entity.getProperty("email"));
         user_details.put("phone", entity.getProperty("phone"));
@@ -50,11 +50,13 @@ public class UserDetailsServlet extends HttpServlet {
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(user_details));
     }
+
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         UserService userService = UserServiceFactory.getUserService();
         String email = userService.getCurrentUser().getEmail();
         String name= getParameter(request,"name","");
         String phone= getParameter(request,"phone","");
+
         Query query = new Query("User");
         Key wantedKey = com.google.appengine.api.datastore.KeyFactory.createKey("User", email);
         Filter filter = new Query.FilterPredicate(Entity.KEY_RESERVED_PROPERTY,Query.FilterOperator.EQUAL,wantedKey );
@@ -62,24 +64,14 @@ public class UserDetailsServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery pq = datastore.prepare(query);
         Entity entity = new Entity("User");
-        entity = pq.asSingleEntity();
         entity.setProperty("name",name);
         entity.setProperty("phone",phone);
         entity.setProperty("email",email);
         datastore.put(entity);
-        System.out.println(entity.getProperty("name"));
 
-        try
-        {
-            response.sendRedirect("/index.html");
-        }
-        catch (IOException e)
-        {
-            System.err.println("Failed: ");
-            e.printStackTrace();
-        }
+        response.sendRedirect("/index.html");
     }
-
+    
     public String getParameter(HttpServletRequest request, String text, String defaultValue)
     {
         String value= request.getParameter(text);

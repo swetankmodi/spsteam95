@@ -22,7 +22,7 @@ import org.json.simple.JSONObject;
 import java.util.List;
 import java.util.ArrayList;
 
-@WebServlet("/login_status")
+@WebServlet("/login-status")
 public class LoginStatusServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -41,17 +41,19 @@ public class LoginStatusServlet extends HttpServlet {
             KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
             Key key = keyFactory.newKey(userEmail);
             Entity getEntity = datastore.get(key);
+            
             if(getEntity == null){ //User with given email does not exist in Datastore, add a User with empty details to datastore
                 Address currAddress = new Address("", "", "", "", "", 0);
                 Entity userEntity = Entity.newBuilder(key)
                             .set("name", "")
                             .set("email", userEmail)
                             .set("phone", 0L)
-                            .set("rating", 5.0)
+                            .set("rating", 0.0)
                                         .build();
                 datastore.put(userEntity);
             }
-        } else {
+        } 
+        else {
             status.put("logged_in", false);
             String urlToRedirectToAfterUserLogsIn = "/index.html";
             String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);

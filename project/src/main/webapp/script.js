@@ -1,5 +1,5 @@
 function loadLoginLogoutButton() {
-    fetch('/login_status').then(response => response.json()).then(status => {
+    fetch('/login-status').then(response => response.json()).then(status => {
         if (status.logged_in) {
             loggedInView(status);
         } 
