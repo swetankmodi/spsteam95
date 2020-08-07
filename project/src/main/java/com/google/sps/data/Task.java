@@ -5,12 +5,10 @@ public final class Task {
 
   /*
    * TODO:
-   * add deadline (property)
-   * add functions:
-   *  addApplicant(id, appliedUsersList)
-   *  assignTaskToUser(id, assignedTo, active)
-   *  rateTaskAssignee(id, completionRating)
-   *  deactivateTask(id)
+   * - add functions:
+   *   - addApplicant(id, appliedUsersList)
+   *   - assignTaskToUser(id, assignedTo, active)
+   *   - rateTaskAssignee(id, completionRating)
    */
 
   private final long id;
@@ -19,6 +17,7 @@ public final class Task {
   private final long creationTime;
   private long compensation;
   private final long creatorId;
+  private long deadline;
   private String address;     // TODO: change into suitable address class.
   private boolean assigned;
   private long assigneeId;
@@ -33,13 +32,14 @@ public final class Task {
    * @param id The detail string of the task.
    */
   public Task(long id, String title, String details, long compensation, long creatorId,
-      String address) {
+      long deadline, String address) {
     this.id = id;
     this.title = title;
     this.details = details;
     this.creationTime = System.currentTimeMillis();
     this.compensation = compensation;
     this.creatorId = creatorId;
+    this.deadline = deadline;
     this.address = address;
     this.assigned = false;
     this.assigneeId = -1;
@@ -62,7 +62,10 @@ public final class Task {
     return this.details;
   }
 
-  /** Returns the creation time. */
+  /**
+   * Returns the creation time as the number of milliseconds from Unix Epoch.
+   * Unix Epoch: 00:00:00 UTC, 1st January 1970
+   */
   public long getCreationTime() {
     return this.creationTime;
   }
@@ -75,6 +78,14 @@ public final class Task {
   /** Returns the creator's User ID. */
   public long getCreatorId() {
     return this.creatorId;
+  }
+
+  /**
+   * Returns the deadline as the number of milliseconds from Unix Epoch.
+   * Unix Epoch: 00:00:00 UTC, 1st January 1970
+   */
+  public long getDeadlineAsLong() {
+    return this.deadline;
   }
 
   /** Returns the Address. */
@@ -115,6 +126,11 @@ public final class Task {
   /** Sets the compensation. */
   public void setCompensation(long compensation) {
     this.compensation = compensation;
+  }
+
+  /** Sets the deadline. */
+  public void setDeadline(long deadline) {
+    this.deadline = deadline;
   }
 
   /** Sets the Address. */

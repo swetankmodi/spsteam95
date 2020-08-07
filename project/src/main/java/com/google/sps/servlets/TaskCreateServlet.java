@@ -8,11 +8,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-// import com.google.gson.Gson;
 import com.google.sps.data.Task;
 import java.io.IOException;
-// import java.util.ArrayList;
-// import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,10 +40,7 @@ public class TaskCreateServlet extends HttpServlet {
     String userEmail = userService.getCurrentUser().getEmail();
     */
 
-    /*// Get the input from the form.
-    String commentText = getParameter(request, "comment", "");*/
-
-    // TODO: add checks to task details coming from client
+    // TODO: add checks to task parameters coming from client
 
     // Form Entity
     Entity taskEntity = new Entity("Task");
@@ -55,6 +49,8 @@ public class TaskCreateServlet extends HttpServlet {
       getParameter(request, "details", ""),
       Long.parseLong(getParameter(request, "compensation", "0")),
       -1, /* TODO: Creator Id: update after login pipeline is complete */
+      getDateTimeLocalAsMillis(getParameter(request, "deadline", ""),
+        Long.parse(getParameter(request, "clientTzOffsetInMins", "0"))),
       getParameter(request, "address", "")
     );
     if (!setTaskEntityProperties(task, taskEntity)) {
@@ -85,6 +81,28 @@ public class TaskCreateServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
+  }
+
+  /**
+   * Convert datetime string from YYYY-MM-DDTHH:MM to number of milliseconds since unix epoch.
+   *
+   * @param dateTimeString The string of format YYYY-MM-DDTHH:MM.
+   * @param timezoneOffsetInMins The timezone offset in mins from UTC.
+   * @return The datetime expressed as the number of milliseconds since unix epoch.
+   */
+  private long getDateTimeLocalAsMillis(String dateTimeString, long timezoneOffsetInMins) {
+    SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+    long milliseconds;
+
+    try {
+      Date date = format.parse(string_date);
+      milliseconds = date.getTime() - 60000 * timezoneOffsetInMins;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return;
+    }
+
+    return milliseconds;
   }
 
   /**
