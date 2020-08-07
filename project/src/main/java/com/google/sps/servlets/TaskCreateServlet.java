@@ -10,6 +10,9 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.Task;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +53,7 @@ public class TaskCreateServlet extends HttpServlet {
       Long.parseLong(getParameter(request, "compensation", "0")),
       -1, /* TODO: Creator Id: update after login pipeline is complete */
       getDateTimeLocalAsMillis(getParameter(request, "deadline", ""),
-        Long.parse(getParameter(request, "clientTzOffsetInMins", "0"))),
+        Long.parseLong(getParameter(request, "clientTzOffsetInMins", "0"))),
       getParameter(request, "address", "")
     );
     if (!setTaskEntityProperties(task, taskEntity)) {
@@ -91,15 +94,15 @@ public class TaskCreateServlet extends HttpServlet {
    * @return The datetime expressed as the number of milliseconds since unix epoch.
    */
   private long getDateTimeLocalAsMillis(String dateTimeString, long timezoneOffsetInMins) {
-    SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
     long milliseconds;
 
     try {
-      Date date = format.parse(string_date);
+      Date date = format.parse(dateTimeString);
       milliseconds = date.getTime() - 60000 * timezoneOffsetInMins;
     } catch (ParseException e) {
       e.printStackTrace();
-      return;
+      return -1;
     }
 
     return milliseconds;
@@ -123,6 +126,7 @@ public class TaskCreateServlet extends HttpServlet {
     taskEntity.setProperty("creationTime", task.getCreationTime());
     taskEntity.setProperty("compensation", task.getCompensation());
     taskEntity.setProperty("creatorId", task.getCreatorId());
+    taskEntity.setProperty("deadline", task.getDeadlineAsLong());
     taskEntity.setProperty("address", task.getAddress());
     taskEntity.setProperty("assigned", task.isAssigned());
     taskEntity.setProperty("assigneeId", task.getAssigneeId());
