@@ -22,7 +22,6 @@ public class LoginStatusServlet extends HttpServlet {
   /**
    * @return JSON response with the status of the current logged-in user and if the user details are complete.
    */
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Gson gson = new Gson();

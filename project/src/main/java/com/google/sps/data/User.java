@@ -12,5 +12,6 @@ public final class User{
     this.phone = phone;
     this.rating = rating;
   }
+  
 }
 
