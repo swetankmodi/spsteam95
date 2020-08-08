@@ -13,7 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.json.simple.JSONObject;    
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @WebServlet("/login-status")
 public class LoginStatusServlet extends HttpServlet {
@@ -24,16 +25,17 @@ public class LoginStatusServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    JSONObject status = new JSONObject();
+    Gson gson = new Gson();
+    JsonObject status = new JsonObject();
 
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
-      status.put("loggedIn", true);
+      status.addProperty("loggedIn", true);
       String userEmail = userService.getCurrentUser().getEmail();
       String urlToRedirectToAfterUserLogsOut = "/index.html";
       String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
-      status.put("logoutUrl", logoutUrl);
-      status.put("email", userEmail);
+      status.addProperty("logoutUrl", logoutUrl);
+      status.addProperty("email", userEmail);
 
       Datastore datastore = DatastoreOptions.newBuilder().setProjectId("summer20-sps-95").build().getService();
       KeyFactory keyFactory = datastore.newKeyFactory().setKind("User");
@@ -54,25 +56,25 @@ public class LoginStatusServlet extends HttpServlet {
                 .set("rating", "0.0")
                 .build();
         datastore.put(userEntity);
-        status.put("editDetails", true);
+        status.addProperty("editDetails", true);
       }
 
       //If the current user has non-dummy details
       else if(getEntity.getString("name").length() > 0){
-        status.put("editDetails", false);
+        status.addProperty("editDetails", false);
       }
 
       //If the current user already exist but has dummy details
       else{
-        status.put("editDetails", true);
+        status.addProperty("editDetails", true);
       }
     }
 
     else {
-      status.put("loggedIn", false);
+      status.addProperty("loggedIn", false);
       String urlToRedirectToAfterUserLogsIn = "/index.html";
       String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-      status.put("loginUrl", loginUrl);
+      status.addProperty("loginUrl", loginUrl);
     }
 
     response.setContentType("application/json;");
