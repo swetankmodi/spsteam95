@@ -1,6 +1,7 @@
 package com.google.sps.data;
 
 public final class User{
+  
   private final String name;
   private final String email;
   private final String phone;
@@ -12,6 +13,6 @@ public final class User{
     this.phone = phone;
     this.rating = rating;
   }
-  
+
 }
 
