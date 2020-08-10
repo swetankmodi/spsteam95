@@ -47,6 +47,22 @@ public final class Task {
     this.active = true;
   }
 
+  public Task(long id, String title, String details, long creationTime, long compensation, long creatorId,
+      long deadline, String address, boolean assigned, long assigneeId, float completionRating, boolean active) {
+    this.id = id;
+    this.title = title;
+    this.details = details;
+    this.creationTime = creationTime;
+    this.compensation = compensation;
+    this.creatorId = creatorId;
+    this.deadline = deadline;
+    this.address = address;
+    this.assigned = assigned;
+    this.assigneeId = assigneeId;
+    this.completionRating = completionRating;
+    this.active = active;
+  }
+
   /** Returns the ID. */
   public long getId() {
     return this.id;
