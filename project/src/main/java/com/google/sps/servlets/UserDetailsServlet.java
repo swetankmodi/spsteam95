@@ -43,7 +43,6 @@ public class UserDetailsServlet extends HttpServlet {
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(user));
-    //response.sendRedirect("/userProfile.html");
   }
 
 }
