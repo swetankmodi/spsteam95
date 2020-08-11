@@ -1,10 +1,10 @@
 function loadLoginLogoutButton() {
   fetch('/login-status').then(response => response.json()).then(status => {
       if (status.loggedIn) {
-          loggedInView(status);
+        loggedInView(status);
       } 
       else {
-          loggedOutView(status);
+        loggedOutView(status);
       }
   });
 }
@@ -19,6 +19,11 @@ function loggedInView(status){
   loggedinSay.innerHTML = 'You are logged in as <strong>';
   loggedinSay.innerHTML += status.email;
   loggedinSay.innerHTML += '</strong>. <a href =\"' + status.logoutUrl + '\">Log out</a>.';
+
+  let myProfile = document.createElement('p');
+  myProfile.innerHTML = '<a href ="userProfile.html">My Profile</a>.'
+
+  loggedinSay.appendChild(myProfile);
 
   document.querySelector('div.' + 'LoginLogoutDiv')
           .appendChild(loggedinSay);
