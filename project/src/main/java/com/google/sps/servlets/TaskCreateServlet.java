@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -95,11 +96,12 @@ public class TaskCreateServlet extends HttpServlet {
    */
   private long getDateTimeLocalAsMillis(String dateTimeString, long timezoneOffsetInMins) {
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+    format.setTimeZone(TimeZone.getTimeZone("UTC"));
     long milliseconds;
 
     try {
       Date date = format.parse(dateTimeString);
-      milliseconds = date.getTime() - 60000 * timezoneOffsetInMins;
+      milliseconds = date.getTime() + 60000 * timezoneOffsetInMins;
     } catch (ParseException e) {
       e.printStackTrace();
       return -1;
