@@ -1,5 +1,7 @@
 package com.google.sps.data;
 
+import com.google.appengine.api.datastore.Entity;
+
 /** A Task. */
 public final class Task {
 
@@ -25,11 +27,16 @@ public final class Task {
   private boolean active;
 
   /**
-   * Parametrized constructor for a Task.
+   * Parametrized constructor for a Task that sets creationTime to current Server time.
+   * Since this sets some parameters with set defaults, this is to be used for task creation.
    *
    * @param id The unique id of the task assigned by the DataStore.
    * @param title The title string of the task.
-   * @param id The detail string of the task.
+   * @param details The detail string of the task.
+   * @param compensation The compensation for the task.
+   * @param creatorId User Id if the task creator.
+   * @param deadline The deadline expressed in Unix Epoch Time.
+   * @param address The address of the task.
    */
   public Task(long id, String title, String details, long compensation, long creatorId,
       long deadline, String address) {
@@ -47,8 +54,25 @@ public final class Task {
     this.active = true;
   }
 
-  public Task(long id, String title, String details, long creationTime, long compensation, long creatorId,
-      long deadline, String address, boolean assigned, long assigneeId, float completionRating, boolean active) {
+  /**
+   * Parametrized constructor for a Task.
+   *
+   * @param id The unique id of the task assigned by the DataStore.
+   * @param title The title string of the task.
+   * @param details The detail string of the task.
+   * @param creationTime The creation time of the task.
+   * @param compensation The compensation for the task.
+   * @param creatorId User Id if the task creator.
+   * @param deadline The deadline expressed in Unix Epoch Time.
+   * @param address The address of the task.
+   * @param assigned Boolean: true if it is assigned, else false.
+   * @param assigneeId User Id of assignee.
+   * @param completionRating The rating of the task after completion.
+   * @param active Boolean: true if it is active, else false.
+   */
+  public Task(long id, String title, String details, long creationTime, long compensation,
+      long creatorId, long deadline, String address, boolean assigned, long assigneeId,
+      float completionRating, boolean active) {
     this.id = id;
     this.title = title;
     this.details = details;
@@ -61,6 +85,36 @@ public final class Task {
     this.assigneeId = assigneeId;
     this.completionRating = completionRating;
     this.active = active;
+  }
+
+  /**
+   * Static function to extract a Task object from a Task Entity.
+   *
+   * @return If the Entity is valid, the task object. Else, null.
+   * @param entity Task Entity.
+   */
+  public static Task getTaskFromDatastoreEntity(Entity entity) {
+    if (!entity.getKind().equals("Task")) {
+      return null;
+    }
+
+    long id = entity.getKey().getId();
+    String title = (String) entity.getProperty("title");
+    String details = (String) entity.getProperty("details");
+    long creationTime = (long) entity.getProperty("creationTime");
+    long compensation = (long) entity.getProperty("compensation");
+    long creatorId = (long) entity.getProperty("creatorId");
+    long deadline = (long) entity.getProperty("deadline");
+    String address = (String) entity.getProperty("address");
+    boolean assigned = (boolean) entity.getProperty("assigned");
+    long assigneeId = (long) entity.getProperty("assigneeId");
+    float completionRating = ((double) entity.getProperty("completionRating")).floatValue();
+    boolean active = (boolean) entity.getProperty("active");
+
+    Task task = new Task(id, title, details, creationTime, compensation, creatorId, deadline,
+        address, assigned, assigneeId, completionRating, active);
+
+    return task;
   }
 
   /** Returns the ID. */
