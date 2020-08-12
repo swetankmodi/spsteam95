@@ -15,34 +15,45 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 import com.google.gson.Gson;
 
-@WebServlet("/profile")
-public class UserDetailsServlet extends HttpServlet {
+@WebServlet("/profile/edit")
+public class EditUserDetailsServlet extends HttpServlet {
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-  /**
-   * @return JSON response with the user-details of the current logged-in user.
-   */
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.sendRedirect("/editProfile.html");
+  }
+
+
+  /**
+   * @param POST request to edit user details
+   */
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
-    
     String userEmail = userService.getCurrentUser().getEmail();
+    String name = request.getParameter("name");
+    String email = request.getParameter("email");
+    String phone = request.getParameter("phone");
+    float rating = Float.parseFloat(request.getParameter("rating"));
+
+    if(!userEmail.equals(email)){
+      return;
+    }
+
     Query query = new Query("User");
     query.addFilter("email", Query.FilterOperator.EQUAL, userEmail);
     PreparedQuery pq = datastore.prepare(query);
+
     Entity userEntity = pq.asSingleEntity();
+    userEntity.setProperty("name", name);
+    userEntity.setProperty("phone", phone);
 
-    String name = userEntity.getProperty("name").toString();
-    String email = userEntity.getProperty("email").toString();
-    String phone = userEntity.getProperty("phone").toString();
-    float rating = Float.parseFloat(userEntity.getProperty("rating").toString());
-    User user = new User(name, email, phone, rating);
-
-    Gson gson = new Gson();
-    response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(user));
+    datastore.put(userEntity);
+    response.sendRedirect("/index.html");
   }
-
 }
