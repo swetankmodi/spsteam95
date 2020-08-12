@@ -29,17 +29,11 @@ public class UserDetailsServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     
-    String userEmail = userService.getCurrentUser().getEmail();
-    Filter emailFilter = new FilterPredicate("email", Query.FilterOperator.EQUAL, userEmail);
-    Query query = new Query("User").setFilter(emailFilter);
-    PreparedQuery pq = datastore.prepare(query);
-    Entity userEntity = pq.asSingleEntity();
-
-    String name = userEntity.getProperty("name").toString();
-    String email = userEntity.getProperty("email").toString();
-    String phone = userEntity.getProperty("phone").toString();
-    float rating = Float.parseFloat(userEntity.getProperty("rating").toString());
-    User user = new User(name, email, phone, rating);
+    User user = User.getUserFromEmail(userService.getCurrentUser().getEmail());
+    if (user == null) {
+      // Logged in user is not registered in Datastore
+      return;
+    }
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -47,3 +41,4 @@ public class UserDetailsServlet extends HttpServlet {
   }
 
 }
+

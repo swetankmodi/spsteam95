@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.Task;
+import com.google.sps.data.User;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,27 +33,32 @@ public class TaskCreateServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    /* TODO: Add user service part after completion of login pipeline
     UserService userService = UserServiceFactory.getUserService();
     
     // If not logged in, do not create new task
     if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/index.html");
       return;
     }
 
-    // Get User details
-    String userEmail = userService.getCurrentUser().getEmail();
-    */
+    // Get Logged-in User details
+    User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
+    if (loggedInUser == null) {
+      // User is not added in datastore, redirect to home page for registering in datastore
+      response.sendRedirect("/index.html");
+      return;
+    }
 
     // TODO: add checks to task parameters coming from client
 
     // Form Entity
     Entity taskEntity = new Entity("Task");
-    Task task = new Task(taskEntity.getKey().getId(),
+    Task task = new Task(
+      taskEntity.getKey().getId() /* Here Id is 0, as Entity is not yet put in Datastore */,
       getParameter(request, "title", ""),
       getParameter(request, "details", ""),
       Long.parseLong(getParameter(request, "compensation", "0")),
-      -1, /* TODO: Creator Id: update after login pipeline is complete */
+      loggedInUser.getId(),
       getDateTimeLocalAsMillis(getParameter(request, "deadline", ""),
         Long.parseLong(getParameter(request, "clientTzOffsetInMins", "0"))),
       getParameter(request, "address", "")
@@ -63,11 +69,10 @@ public class TaskCreateServlet extends HttpServlet {
 
     // Store in Datastore
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(taskEntity);
+    long taskId = datastore.put(taskEntity).getId();
 
-    // TODO: Redirect to Task View after creation of task to view the created task
-    // Redirect back to the HTML page.
-    response.sendRedirect("/index.html");
+    // Redirect to Task View to view the created task
+    response.sendRedirect("/task_view.html?taskId=" + String.valueOf(taskId));
   }
 
   /**

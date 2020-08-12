@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 
 @WebServlet("/login-status")
 public class LoginStatusServlet extends HttpServlet {
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   /**
    * @return JSON response with the status of the current logged-in user and if the user details are complete.
@@ -38,14 +39,11 @@ public class LoginStatusServlet extends HttpServlet {
       status.addProperty("logoutUrl", logoutUrl);
       status.addProperty("email", userEmail);
 
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      Filter emailFilter = new FilterPredicate("email", Query.FilterOperator.EQUAL, userEmail);
-      Query query = new Query("User").setFilter(emailFilter);
-      PreparedQuery pq = datastore.prepare(query);
-      Entity getEntity = pq.asSingleEntity();
+      User loggedInUser = User.getUserFromEmail(userEmail);
 
-      //User with given email does not exist in Datastore, add a User with dummy user details to datastore
-      if(getEntity == null){ 
+      if (loggedInUser == null) {
+        // User with given email does not exist in Datastore,
+        // add a User with dummy user details to datastore
         Entity userEntity = new Entity("User");
         userEntity.setProperty("name", "");
         userEntity.setProperty("email", userEmail);
@@ -54,14 +52,12 @@ public class LoginStatusServlet extends HttpServlet {
         datastore.put(userEntity);
         status.addProperty("editDetails", true);
       }
-
-      //If the current user has non-dummy details
-      else if((getEntity.getProperty("name").toString()).length() > 0){
+      else if(loggedInUser.getName().length() > 0) {
+        //If the current user has non-dummy details
         status.addProperty("editDetails", false);
       }
-
-      //If the current user already exist but has dummy details
       else{
+        //If the current user already exists but has dummy details
         status.addProperty("editDetails", true);
       }
     }
@@ -77,3 +73,4 @@ public class LoginStatusServlet extends HttpServlet {
     response.getWriter().println(status);
   }
 }
+
