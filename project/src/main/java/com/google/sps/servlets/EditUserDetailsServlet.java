@@ -51,9 +51,7 @@ public class EditUserDetailsServlet extends HttpServlet {
 
     Entity userEntity = pq.asSingleEntity();
     userEntity.setProperty("name", name);
-    userEntity.setProperty("email", email);
     userEntity.setProperty("phone", phone);
-    userEntity.setProperty("rating", rating);
 
     datastore.put(userEntity);
     response.sendRedirect("/index.html");
