@@ -5,6 +5,9 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 // import com.google.appengine.api.users.UserService;
@@ -29,14 +32,18 @@ public class TaskListServlet extends HttpServlet {
       throws IOException, ServletException {
     String uriInfo = request.getRequestURI();
 
-    if (uriInfo.equals("task/created")) {
-      // form filters for created tasks
-    } else if (uriInfo.equals("task/completed")) {
+    // Prepare the Query
+    Query query = new Query("Task").addSort("creationTime", SortDirection.DESCENDING);
+    if (uriInfo.equals("/task/created")) {
+      Filter creatorFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL, 0);
+      query.setFilter(creatorFilter);
+    } else if (uriInfo.equals("/task/completed")) {
       //form filters for completed tasks
+      Filter creatorFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL, -1);
+      query.setFilter(creatorFilter);
     }
 
     // Query the Datastore for the required tasks
-    Query query = new Query("Task").addSort("creationTime", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
@@ -57,4 +64,3 @@ public class TaskListServlet extends HttpServlet {
   }
 
 }
-

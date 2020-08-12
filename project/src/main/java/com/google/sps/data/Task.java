@@ -108,7 +108,7 @@ public final class Task {
     String address = (String) entity.getProperty("address");
     boolean assigned = (boolean) entity.getProperty("assigned");
     long assigneeId = (long) entity.getProperty("assigneeId");
-    float completionRating = ((double) entity.getProperty("completionRating")).floatValue();
+    float completionRating = ((Double) entity.getProperty("completionRating")).floatValue();
     boolean active = (boolean) entity.getProperty("active");
 
     Task task = new Task(id, title, details, creationTime, compensation, creatorId, deadline,

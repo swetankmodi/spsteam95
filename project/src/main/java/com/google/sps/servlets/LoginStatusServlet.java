@@ -3,9 +3,10 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.User;
@@ -38,8 +39,8 @@ public class LoginStatusServlet extends HttpServlet {
       status.addProperty("email", userEmail);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      Query query = new Query("User");
-      query.addFilter("email", Query.FilterOperator.EQUAL, userEmail);
+      Filter emailFilter = new FilterPredicate("email", Query.FilterOperator.EQUAL, userEmail);
+      Query query = new Query("User").setFilter(emailFilter);
       PreparedQuery pq = datastore.prepare(query);
       Entity getEntity = pq.asSingleEntity();
 
