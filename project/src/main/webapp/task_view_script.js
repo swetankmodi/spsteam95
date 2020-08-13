@@ -12,5 +12,17 @@ function viewTaskDetails() {
       taskContainer.innerHTML += '<p><strong>Task Deadline</strong>: ' + deadline + "</p>";
       taskContainer.innerHTML += '<p><strong>Created By</strong>: ' + response["creatorId"] + "</p>";
       taskContainer.innerHTML += '<p><strong>Compensation</strong>: ' + response["compensation"] + "</p>";
+      loadAssigneeList(response["taskAssigneeList"])
   })
+} 
+
+/* 
+ * Function to load task assignees list
+ */
+function loadAssigneeList(taskAssigneeList)
+{
+  const taskContainer = document.getElementById('task-assignee-list');
+  for(assignee in taskAssigneeList){
+      console.log(assignee);
+  }
 }

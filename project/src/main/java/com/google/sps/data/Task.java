@@ -223,5 +223,10 @@ public final class Task {
       this.active = false;
   }
 
+  /** Check if user is the task creater. */
+  public boolean isCreator() {
+      return this.getId()==this.getCreatorId();
+  }
+
 }
 
