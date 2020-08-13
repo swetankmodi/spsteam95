@@ -43,20 +43,7 @@ public class TaskViewServlet extends HttpServlet {
         return;
     }
 
-    long id = entity.getKey().getId();
-    String title = (String) entity.getProperty("title");
-    String details = (String) entity.getProperty("details");
-    long creationTime = (long) entity.getProperty("creationTime");
-    long compensation = (long) entity.getProperty("compensation");
-    long creatorId = (long) entity.getProperty("creatorId");
-    long deadline = (long) entity.getProperty("deadline");
-    String address = (String) entity.getProperty("address");
-    boolean assigned = (boolean) entity.getProperty("assigned");
-    long assigneeId = (long) entity.getProperty("assigneeId");
-    double completionRating = (double) entity.getProperty("completionRating");
-    boolean active = (boolean) entity.getProperty("active");
-
-    Task task = new Task(id, title, details, creationTime, compensation, creatorId, deadline, address, assigned, assigneeId, (float)completionRating, active);
+    Task task = Task.getTaskFromDatastoreEntity(entity);
 
     String json = convertToJson(task);
     response.setContentType("application/json;");

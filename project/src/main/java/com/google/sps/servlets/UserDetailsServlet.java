@@ -3,9 +3,10 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -28,17 +29,11 @@ public class UserDetailsServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     
-    String userEmail = userService.getCurrentUser().getEmail();
-    Query query = new Query("User");
-    query.addFilter("email", Query.FilterOperator.EQUAL, userEmail);
-    PreparedQuery pq = datastore.prepare(query);
-    Entity userEntity = pq.asSingleEntity();
-
-    String name = userEntity.getProperty("name").toString();
-    String email = userEntity.getProperty("email").toString();
-    String phone = userEntity.getProperty("phone").toString();
-    float rating = Float.parseFloat(userEntity.getProperty("rating").toString());
-    User user = new User(name, email, phone, rating);
+    User user = User.getUserFromEmail(userService.getCurrentUser().getEmail());
+    if (user == null) {
+      // Logged in user is not registered in Datastore
+      return;
+    }
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -46,3 +41,4 @@ public class UserDetailsServlet extends HttpServlet {
   }
 
 }
+
