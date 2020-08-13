@@ -31,7 +31,7 @@ import javax.servlet.ServletException;
 /** Servlet facilitating listing of tasks. */
 @WebServlet(urlPatterns = {"/task/all", "/task/created", "/task/assigned", "/task/completed"})
 public class TaskListServlet extends HttpServlet {
-  static final int PAGE_SIZE = 20;
+  static final int PAGE_SIZE = 25;
   private final DatastoreService datastore;
 
   public TaskListServlet() {
