@@ -1,6 +1,7 @@
 package com.google.sps.data;
 
 import com.google.appengine.api.datastore.Entity;
+import java.util.List;
 
 /** A Task. */
 public final class Task {
@@ -25,6 +26,7 @@ public final class Task {
   private long assigneeId;
   private float completionRating;
   private boolean active;
+  private List<String> taskAssigneeList;
 
   /**
    * Parametrized constructor for a Task that sets creationTime to current Server time.
@@ -212,6 +214,11 @@ public final class Task {
   public void setCompletionRating(float completionRating) {
     this.completionRating = completionRating;
   }
+
+  public void setTaskAssigneeList(List<String> taskAssigneeList){
+    this.taskAssigneeList = taskAssigneeList;
+  }
+
 
   /** Activates the task. */
   public void activate() {

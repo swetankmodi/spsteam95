@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,15 +58,13 @@ public class TaskViewServlet extends HttpServlet {
 
         for (Entity assigneeEntity : datastore.prepare(query).asIterable()) {
             taskAssigneeList.add((String) assigneeEntity.getProperty("applicantId"));
+            taskAssigneeList.add("Heya");
         }
     }
+    task.setTaskAssigneeList(taskAssigneeList);
     Gson gson = new Gson();
-    
-    JsonObject taskInfo = new JsonObject();
-    taskInfo.addProperty("task", gson.toJson(task));
-    taskInfo.addProperty("taskAssigneeList", gson.toJson(taskAssigneeList));
     response.setContentType("application/json;");
-    response.getWriter().println(taskInfo);
+    response.getWriter().println(gson.toJson(task));
   }
 
   /**
