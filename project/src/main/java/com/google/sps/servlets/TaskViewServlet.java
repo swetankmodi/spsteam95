@@ -52,13 +52,12 @@ public class TaskViewServlet extends HttpServlet {
     Task task = Task.getTaskFromDatastoreEntity(entity);
     List<String> taskAssigneeList = new ArrayList<String>();
 
-    if(task.isCreator()) {
+    if(task.isCreator() && task.isAssigned()) {
         Filter taskIdFilter = new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
         Query query=new Query("TaskApplicants");
 
         for (Entity assigneeEntity : datastore.prepare(query).asIterable()) {
             taskAssigneeList.add((String) assigneeEntity.getProperty("applicantId"));
-            taskAssigneeList.add("Heya");
         }
     }
     task.setTaskAssigneeList(taskAssigneeList);

@@ -235,5 +235,10 @@ public final class Task {
       return this.getId()==this.getCreatorId();
   }
 
+  /** Check if task is assigned or not. */
+  public boolean isAssigned() {
+    return !(this.assigned);
+}
+
 }
 
