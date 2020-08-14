@@ -210,6 +210,12 @@ public final class Task {
     this.address = address;
   }
 
+  /** Sets the Task Assignee Id. */
+  public void setAssigneeId(long assigneeId) {
+    this.assigneeId = assigneeId;
+    this.assigned = true;
+  }
+
   /** Sets the Task Completion Rating. */
   public void setCompletionRating(float completionRating) {
     this.completionRating = completionRating;
@@ -229,16 +235,6 @@ public final class Task {
   public void deactivate() {
       this.active = false;
   }
-
-  /** Check if user is the task creater. */
-  public boolean isCreator() {
-      return this.getId()==this.getCreatorId();
-  }
-
-  /** Check if task is assigned or not. */
-  public boolean isAssigned() {
-    return !(this.assigned);
-}
 
 }
 
