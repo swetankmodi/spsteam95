@@ -12,26 +12,33 @@ function viewTaskDetails() {
       taskContainer.innerHTML += '<p><strong>Task Deadline</strong>: ' + deadline + "</p>";
       taskContainer.innerHTML += '<p><strong>Created By</strong>: ' + response.creatorId + "</p>";
       taskContainer.innerHTML += '<p><strong>Compensation</strong>: ' + response.compensation + "</p>";
-      loadAssigneeList(response.taskAssigneeList)
+      loadAssigneeList(response.taskAssigneeList, response.id)
   })
 } 
 
 /* 
  * Function to load task assignees list
  */
-function loadAssigneeList(taskAssigneeList)
-{
+function loadAssigneeList(taskAssigneeList, taskId) {
   console.log(taskAssigneeList);
   var taskAssigneeContainer = document.getElementById('task-assignee-list');
   for( i=0;i<taskAssigneeList.length;i++) {
     var assignButton = document.createElement('button');
+    let assign = taskAssigneeList[i];
     assignButton.innerHTML = "Assign";
-    assignButton.onclick = function(){
-      /*TODO:
-        We need to make a POST request by passing
-        assignee's id and task id
-      */
-      alert('TODO:You need to make a POST request by passing assignees id and task id');
+    assignButton.onclick = function() {
+      let data = {"assigneeId": assign, "taskId": taskId};
+      const options = {
+        method : 'POST' ,
+        headers : {
+          'Content-type' : 'application/json'
+        },
+        body : JSON.stringify(data)
+      };
+      console.log(options);
+      fetch('task/assign',options).then((response) => {
+        console.log(response);
+      })
     }
     var assignee = document.createElement('button');
     assignee.innerHTML = taskAssigneeList[i];

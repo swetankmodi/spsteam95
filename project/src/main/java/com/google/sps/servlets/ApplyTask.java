@@ -29,6 +29,7 @@ public class ApplyTask extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    System.out.println(request);
     String taskId = getParameter(request, "taskId", "");
     if (taskId.equals(""))
       return;
