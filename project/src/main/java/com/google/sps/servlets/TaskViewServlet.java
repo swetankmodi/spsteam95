@@ -15,6 +15,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Task;
+import com.google.sps.data.User;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,38 +54,52 @@ public class TaskViewServlet extends HttpServlet {
       System.out.println(e);
       return;
     }
-    Task task = Task.getTaskFromDatastoreEntity(entity);
-    List<Long> taskAssigneeList = new ArrayList<>();
-
+    
     //get user id
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       return;
     }
+
+    
     String userEmail = userService.getCurrentUser().getEmail();
-    Gson gson = new Gson();
+    User user = User.getUserFromEmail(userEmail);
+    long userId = user.getId();
+
+    Task task = Task.getTaskFromDatastoreEntity(entity);
+    List<Long> taskAssigneeList = new ArrayList<>();
     JsonObject taskData = new JsonObject();
-    Filter emailFilter = new FilterPredicate("email", FilterOperator.EQUAL, userEmail);
-    Query userQuery = new Query("User").setFilter(emailFilter);
-    pq = datastore.prepare(userQuery);
-
-    Entity userEntity = pq.asSingleEntity();
-    long userId = userEntity.getKey().getId();
-
+    Gson gson = new Gson();
+    
+    boolean isCurrentUserAlreadyApplied = false;
     if(task.getCreatorId() == userId && !task.isAssigned()) {
       Filter taskIdFilter =
         new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
       Query taskQuery = new Query("TaskApplicants").setFilter(taskIdFilter);
       pq = datastore.prepare(taskQuery);
       for (Entity assigneeEntity : pq.asIterable()) {
-        System.out.println(assigneeEntity.getProperty("applicantId").toString() + " " + assigneeEntity.getProperty("taskId").toString());
-        taskAssigneeList.add(Long.parseLong(assigneeEntity.getProperty("applicantId").toString()));
+        long applicantsId = Long.parseLong(assigneeEntity.getProperty("applicantId").toString());
+        taskAssigneeList.add(applicantsId);
       }
     }
-    
+
+    /*
+    Functionality to check if the current logged in User has already applied for the task
+    */
+    Filter taskIdFilter =
+        new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
+    Filter applicantIdFilter =
+        new FilterPredicate("applicantId", Query.FilterOperator.EQUAL, userId);
+
+    Query taskQuery = new Query("TaskApplicants").setFilter(taskIdFilter).setFilter(applicantIdFilter);
+    pq = datastore.prepare(taskQuery);
+    Entity getStatusEntity = pq.asSingleEntity();
+    isCurrentUserAlreadyApplied = !(getStatusEntity == null);
+
     taskData.add("task", gson.toJsonTree(task));
     taskData.add("taskAssigneeList", gson.toJsonTree(taskAssigneeList));
     taskData.addProperty("isCreator", task.getCreatorId() == userId);
+    taskData.addProperty("isCurrentUserAlreadyApplied", isCurrentUserAlreadyApplied);
     System.out.println(taskAssigneeList);
     System.out.println(taskData);
     response.setContentType("application/json;");

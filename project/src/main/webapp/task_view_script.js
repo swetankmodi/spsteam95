@@ -12,7 +12,9 @@ function viewTaskDetails() {
       taskContainer.innerHTML += '<p><strong>Task Deadline</strong>: ' + deadline + "</p>";
       taskContainer.innerHTML += '<p><strong>Created By</strong>: ' + response.task.creatorId + "</p>";
       taskContainer.innerHTML += '<p><strong>Compensation</strong>: ' + response.task.compensation + "</p>";
-      if(!response.isCreator && !response.task.assigned)
+      
+      console.log(response.isCurrentUserAlreadyApplied);
+      if(!response.isCreator && !response.task.assigned && !response.isCurrentUserAlreadyApplied)
         loadApplyButton(response.task.id);
       loadAssigneeList(response.taskAssigneeList, response.task.id)
   })
@@ -59,4 +61,8 @@ function loadAssigneeList(taskAssigneeList, taskId) {
     assigneeContainer.append(assignButton);
     taskAssigneeContainer.append(assigneeContainer);
   }
+}
+
+window.onload = () => {
+  viewTaskDetails();
 }
