@@ -26,7 +26,6 @@ public final class Task {
   private long assigneeId;
   private float completionRating;
   private boolean active;
-  private List<String> taskAssigneeList;
 
   /**
    * Parametrized constructor for a Task that sets creationTime to current Server time.
@@ -219,10 +218,6 @@ public final class Task {
   /** Sets the Task Completion Rating. */
   public void setCompletionRating(float completionRating) {
     this.completionRating = completionRating;
-  }
-
-  public void setTaskAssigneeList(List<String> taskAssigneeList){
-    this.taskAssigneeList = taskAssigneeList;
   }
 
 

@@ -25,7 +25,7 @@ import javax.servlet.ServletException;
 
 /** Servlet facilitating viewing task details. */
 @WebServlet("/task/apply")
-public class ApplyTask extends HttpServlet {
+public class ApplyTaskServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

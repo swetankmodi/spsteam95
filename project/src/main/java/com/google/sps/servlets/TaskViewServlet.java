@@ -71,6 +71,10 @@ public class TaskViewServlet extends HttpServlet {
     JsonObject taskData = new JsonObject();
     Gson gson = new Gson();
     
+    /*
+    If the current user is the creator of the task and the task is not already assigned, then send 
+    list of assignees to client
+    */
     boolean isCurrentUserAlreadyApplied = false;
     if(task.getCreatorId() == userId && !task.isAssigned()) {
       Filter taskIdFilter =
@@ -84,24 +88,25 @@ public class TaskViewServlet extends HttpServlet {
     }
 
     /*
-    Functionality to check if the current logged in User has already applied for the task
+    To check if the current logged in User has already applied for the task
     */
     Filter taskIdFilter =
         new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
-    Filter applicantIdFilter =
-        new FilterPredicate("applicantId", Query.FilterOperator.EQUAL, userId);
-
-    Query taskQuery = new Query("TaskApplicants").setFilter(taskIdFilter).setFilter(applicantIdFilter);
+  
+    Query taskQuery = new Query("TaskApplicants").setFilter(taskIdFilter);
     pq = datastore.prepare(taskQuery);
-    Entity getStatusEntity = pq.asSingleEntity();
-    isCurrentUserAlreadyApplied = !(getStatusEntity == null);
+    for(Entity applicantsEntity : pq.asIterable()){
+      Long id = Long.parseLong(applicantsEntity.getProperty("applicantId").toString());
+      if(id == userId){
+        isCurrentUserAlreadyApplied = true;
+        break;
+      }
+    }
 
     taskData.add("task", gson.toJsonTree(task));
     taskData.add("taskAssigneeList", gson.toJsonTree(taskAssigneeList));
     taskData.addProperty("isCreator", task.getCreatorId() == userId);
     taskData.addProperty("isCurrentUserAlreadyApplied", isCurrentUserAlreadyApplied);
-    System.out.println(taskAssigneeList);
-    System.out.println(taskData);
     response.setContentType("application/json;");
     response.getWriter().println(taskData);
   }

@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
-@WebServlet("/profile")
-public class UserDetailsServlet extends HttpServlet {
+@WebServlet("/profile/my")
+public class MyProfileServlet extends HttpServlet {
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   /**
@@ -27,12 +27,9 @@ public class UserDetailsServlet extends HttpServlet {
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    long userId = getParameter(request, "userId", -1L);
+    UserService userService = UserServiceFactory.getUserService();
     
-    if (userId == -1)
-      return;
-    
-    User user = User.getUserFromId(userId);
+    User user = User.getUserFromEmail(userService.getCurrentUser().getEmail());
     if (user == null) {
       // Logged in user is not registered in Datastore
       return;
@@ -42,13 +39,6 @@ public class UserDetailsServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(user));
   
-  }
-  private Long getParameter(HttpServletRequest request, String name, Long defaultValue) {
-    Long value = Long.parseLong(request.getParameter(name));
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
   }
 }
 

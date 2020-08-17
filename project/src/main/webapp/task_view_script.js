@@ -16,6 +16,8 @@ function viewTaskDetails() {
       console.log(response.isCurrentUserAlreadyApplied);
       if(!response.isCreator && !response.task.assigned && !response.isCurrentUserAlreadyApplied)
         loadApplyButton(response.task.id);
+      if(response.isCreator && response.task.assigned && response.task.active)
+        loadRateUserInputBox(response.task.id, response.task.assigneeId);
       loadAssigneeList(response.taskAssigneeList, response.task.id)
   })
 } 
@@ -32,6 +34,45 @@ function loadApplyButton(taskId){
     location.reload();
   }
   taskApplyContainer.append(applyButton);
+}
+
+function isNumberKey(evt){
+  var charCode = (evt.which) ? evt.which : event.keyCode
+  if (charCode > 31 && (charCode < 48 || charCode > 57))
+    return false;
+  return true;
+}
+
+function loadRateUserInputBox(taskId, assigneeId){
+
+  let rate = document.createElement('textarea');
+  rate.className = 'text';
+  rate.name = 'rating';
+
+  let id1 = document.createElement('textarea');
+  id1.className = 'text';
+  id1.name = 'taskId';
+  id1.value = taskId;
+
+  let id2 = document.createElement('textarea');
+  id2.className = 'text';
+  id2.name = 'assigneeId';
+  id2.value = assigneeId;
+
+  let ratingSubmit = document.createElement('input');
+  ratingSubmit.className = 'button_color'
+  ratingSubmit.type = 'submit';
+  ratingSubmit.value = 'Post';
+
+  let rateForm = document.createElement('form');
+  rateForm.method = 'POST';
+  rateForm.action = '/task/rate';
+  rateForm.appendChild(rate);
+  rateForm.appendChild(id1);
+  rateForm.appendChild(id2);
+  rateForm.appendChild(ratingSubmit);
+  document.querySelector('div.' + 'task-rate')
+          .appendChild(rateForm);
 }
 
 /* 
