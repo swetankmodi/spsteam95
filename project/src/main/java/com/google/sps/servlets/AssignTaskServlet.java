@@ -23,25 +23,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.util.Enumeration;
+
 /** Servlet facilitating assign task. */
 @WebServlet("/task/assign")
 public class AssignTaskServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println(request.getMethod());
-    Enumeration<String> params = request.getParameterNames(); 
-    while(params.hasMoreElements()){
-      String paramName = params.nextElement();
-      System.out.println("Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
-    }
     long taskId = getParameter(request, "taskId", -1);
-    
     if (taskId == -1)
       return;
 
     long assigneeId = getParameter(request, "assigneeId", -1);
-    System.out.println("Hola" +" "+taskId + " " +assigneeId);
+    
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       return;
@@ -56,14 +50,10 @@ public class AssignTaskServlet extends HttpServlet {
       return;
     }
     
-    Task task = Task.getTaskFromDatastoreEntity(taskEntity);
-    task.setAssigneeId(assigneeId);
     taskEntity.setProperty("assigneeId", assigneeId);
     taskEntity.setProperty("assigned", true);
 
     datastore.put(taskEntity);
-    /*TODO:
-        response to be redirected to the task_view page*/
     
     response.sendRedirect("/task_view.html?taskId=" + String.valueOf(taskId));
   }

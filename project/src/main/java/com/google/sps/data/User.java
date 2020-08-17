@@ -7,6 +7,8 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.KeyFactory;
+import javax.servlet.ServletException;
 
 public final class User {
 
@@ -44,10 +46,36 @@ public final class User {
     }
 
     long id = userEntity.getKey().getId();
-    String name = (String) userEntity.getProperty("name");
-    String email = (String) userEntity.getProperty("email");
-    String phone = (String) userEntity.getProperty("phone");
-    float rating = ((Double) userEntity.getProperty("rating")).floatValue();
+    String name = userEntity.getProperty("name").toString();
+    String email = userEntity.getProperty("email").toString();
+    String phone = userEntity.getProperty("phone").toString();
+    float rating = Float.parseFloat(userEntity.getProperty("rating").toString());
+    User user = new User(id, name, email, phone, rating);
+
+    return user;
+  }
+
+  /**
+   * Static function to get a User Object from datastore from corresponding Datastore id.
+   *
+   * @return The User object corresponding to the id, if the user is registered in datastore.
+   *         If no such entity is stored in datastore, then it returns null.
+   * @param userEmail User id in datastore
+   */
+  public static User getUserFromId(long id) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Entity userEntity;
+    try {
+      userEntity = datastore.get(KeyFactory.createKey("User", id));
+    } catch (Exception e) {
+      System.out.println(e);
+      return null;
+    }
+
+    String name = userEntity.getProperty("name").toString();
+    String email = userEntity.getProperty("email").toString();
+    String phone = userEntity.getProperty("phone").toString();
+    float rating = Float.parseFloat(userEntity.getProperty("rating").toString());
     User user = new User(id, name, email, phone, rating);
 
     return user;

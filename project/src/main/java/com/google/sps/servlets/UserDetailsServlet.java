@@ -27,9 +27,12 @@ public class UserDetailsServlet extends HttpServlet {
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
+    long userId = getParameter(request, "userId", -1L);
     
-    User user = User.getUserFromEmail(userService.getCurrentUser().getEmail());
+    if (userId == -1)
+      return;
+    
+    User user = User.getUserFromId(userId);
     if (user == null) {
       // Logged in user is not registered in Datastore
       return;
@@ -38,7 +41,15 @@ public class UserDetailsServlet extends HttpServlet {
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(user));
+    //response.sendRedirect("/userProfile.html?userId=" + String.valueOf(userId));
+    
   }
-
+  private Long getParameter(HttpServletRequest request, String name, Long defaultValue) {
+    Long value = Long.parseLong(request.getParameter(name));
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
+  }
 }
 

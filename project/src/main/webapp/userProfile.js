@@ -1,11 +1,13 @@
-function addProfileDetailsToDOM(){
-  fetch('/profile').then(response => response.json()).then(user => {
-
-    //Set the name, email, phone and rating to the previous filled data
-    var name = user.name;
-    var email = user.email;
-    var phone = user.phone;
-    var rating = user.rating;
+function addProfileDetailsToDOM() {
+  var queryParams = new URLSearchParams(window.location.search);
+  queryParams = queryParams.toString();
+  fetch('/profile?' + queryParams).then((response) => {
+      return response.json();
+  }).then((response) => {
+    var name = response.name;
+    var email = response.email;
+    var phone = response.phone;
+    var rating = response.rating;
     
     var nameDiv = document.createElement('p');
     nameDiv.innerHTML = 'Name: ';
@@ -30,8 +32,9 @@ function addProfileDetailsToDOM(){
     profileDiv.appendChild(ratingDiv);
     document.querySelector('div.' + 'profileDiv')
           .appendChild(profileDiv);
-  });
-}
+  })
+} 
+
 
 window.onload = () => {
   addProfileDetailsToDOM();

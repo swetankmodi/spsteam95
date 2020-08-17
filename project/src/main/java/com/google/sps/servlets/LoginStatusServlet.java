@@ -55,6 +55,7 @@ public class LoginStatusServlet extends HttpServlet {
       else if(loggedInUser.getName().length() > 0) {
         //If the current user has non-dummy details
         status.addProperty("editDetails", false);
+        status.addProperty("userId", loggedInUser.getId());
       }
       else{
         //If the current user already exists but has dummy details

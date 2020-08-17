@@ -12,10 +12,25 @@ function viewTaskDetails() {
       taskContainer.innerHTML += '<p><strong>Task Deadline</strong>: ' + deadline + "</p>";
       taskContainer.innerHTML += '<p><strong>Created By</strong>: ' + response.task.creatorId + "</p>";
       taskContainer.innerHTML += '<p><strong>Compensation</strong>: ' + response.task.compensation + "</p>";
+      if(!response.isCreator && !response.task.assigned)
+        loadApplyButton(response.task.id);
       loadAssigneeList(response.taskAssigneeList, response.task.id)
   })
 } 
 
+function loadApplyButton(taskId){
+  var taskApplyContainer = document.getElementById('task-apply');
+  var applyButton = document.createElement('button');
+  applyButton.innerHTML = "Apply for this task !";
+  applyButton.onclick = function() {
+    var ajaxPostRequest = new XMLHttpRequest();
+    ajaxPostRequest.open("POST", "/task/apply");
+    ajaxPostRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajaxPostRequest.send("taskId=" + taskId);
+    location.reload();
+  }
+  taskApplyContainer.append(applyButton);
+}
 
 /* 
  * Function to load task assignees list
@@ -32,15 +47,12 @@ function loadAssigneeList(taskAssigneeList, taskId) {
       ajaxPostRequest.open("POST", "/task/assign");
       ajaxPostRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       ajaxPostRequest.send("taskId=" + taskId + "&assigneeId=" + assign);
+      location.reload();
     }
     var assignee = document.createElement('button');
     assignee.innerHTML = taskAssigneeList[i];
     assignee.onclick = function(){
-      /*TODO:
-        We need to redirect it to assignee's profile id
-        rather than its own profile
-      */
-      location.href='userProfile.html';
+      location.href = '/userProfile.html?userId=' + assign;
     }
     var assigneeContainer = document.createElement('li');
     assigneeContainer.append(assignee);

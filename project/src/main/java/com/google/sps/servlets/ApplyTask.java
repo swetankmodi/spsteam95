@@ -29,9 +29,8 @@ public class ApplyTask extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println(request);
-    String taskId = getParameter(request, "taskId", "");
-    if (taskId.equals(""))
+    Long taskId = getParameter(request, "taskId", -1);
+    if (taskId == -1)
       return;
     
     UserService userService = UserServiceFactory.getUserService();
@@ -41,15 +40,12 @@ public class ApplyTask extends HttpServlet {
     String userEmail = userService.getCurrentUser().getEmail();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    
     Filter emailFilter = new FilterPredicate("email", Query.FilterOperator.EQUAL, userEmail);
     Query query = new Query("User").setFilter(emailFilter);
     PreparedQuery pq = datastore.prepare(query);
-
     Entity userEntity = pq.asSingleEntity();
 
     long userId = userEntity.getKey().getId();
-    System.out.println(userId);
 
     Entity taskApplicantsEntity = new Entity("TaskApplicants");
     taskApplicantsEntity.setProperty("taskId", taskId);
@@ -60,8 +56,8 @@ public class ApplyTask extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
+  private Long getParameter(HttpServletRequest request, String name, long defaultValue) {
+    Long value = Long.parseLong(request.getParameter(name));
     if (value == null) {
       return defaultValue;
     }

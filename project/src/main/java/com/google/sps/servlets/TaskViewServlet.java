@@ -10,6 +10,7 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
@@ -38,7 +39,7 @@ public class TaskViewServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    long taskId = Long.parseLong(getParameter(request, "taskId", "-1"));
+    long taskId = getParameter(request, "taskId", -1L);
     
     if (taskId == -1)
       return;
@@ -70,16 +71,19 @@ public class TaskViewServlet extends HttpServlet {
     long userId = userEntity.getKey().getId();
 
     if(task.getCreatorId() == userId && !task.isAssigned()) {
-      Filter taskIdFilter = new FilterPredicate("taskId", FilterOperator.EQUAL, task.getId());
-      query = new Query("TaskApplicants").setFilter(taskIdFilter);
-      PreparedQuery results = datastore.prepare(query);
-      for (Entity assigneeEntity : results.asIterable()) {
+      Filter taskIdFilter =
+        new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
+      Query taskQuery = new Query("TaskApplicants").setFilter(taskIdFilter);
+      pq = datastore.prepare(taskQuery);
+      for (Entity assigneeEntity : pq.asIterable()) {
+        System.out.println(assigneeEntity.getProperty("applicantId").toString() + " " + assigneeEntity.getProperty("taskId").toString());
         taskAssigneeList.add(Long.parseLong(assigneeEntity.getProperty("applicantId").toString()));
       }
-      //Dummy data
     }
+    
     taskData.add("task", gson.toJsonTree(task));
     taskData.add("taskAssigneeList", gson.toJsonTree(taskAssigneeList));
+    taskData.addProperty("isCreator", task.getCreatorId() == userId);
     System.out.println(taskAssigneeList);
     System.out.println(taskData);
     response.setContentType("application/json;");
@@ -95,8 +99,8 @@ public class TaskViewServlet extends HttpServlet {
    * @return The request parameter, or the default value if the parameter
    *         was not specified by the client
    */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
+  private Long getParameter(HttpServletRequest request, String name, Long defaultValue) {
+    Long value = Long.parseLong(request.getParameter(name));
     if (value == null) {
       return defaultValue;
     }
