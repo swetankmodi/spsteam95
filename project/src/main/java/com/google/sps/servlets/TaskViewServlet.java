@@ -24,12 +24,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
 /** Servlet facilitating viewing task details. */
 @WebServlet("/task")
 public class TaskViewServlet extends HttpServlet {
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private PreparedQuery pq;
+  private Query query;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,55 +41,49 @@ public class TaskViewServlet extends HttpServlet {
     long taskId = Long.parseLong(getParameter(request, "taskId", "-1"));
     
     if (taskId == -1)
-        return;
+      return;
     
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
     Entity entity;
 
     try {
-        entity = datastore.get(KeyFactory.createKey("Task", taskId));
+      entity = datastore.get(KeyFactory.createKey("Task", taskId));
     } catch (Exception e) {
-        System.out.println(e);
-        return;
+      System.out.println(e);
+      return;
     }
-
     Task task = Task.getTaskFromDatastoreEntity(entity);
-    List<String> taskAssigneeList = new ArrayList<String>();
+    List<Long> taskAssigneeList = new ArrayList<>();
 
     //get user id
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
-        return;
+      return;
     }
     String userEmail = userService.getCurrentUser().getEmail();
-    
+    Gson gson = new Gson();
+    JsonObject taskData = new JsonObject();
     Filter emailFilter = new FilterPredicate("email", FilterOperator.EQUAL, userEmail);
     Query userQuery = new Query("User").setFilter(emailFilter);
-    PreparedQuery pq = datastore.prepare(userQuery);
+    pq = datastore.prepare(userQuery);
 
     Entity userEntity = pq.asSingleEntity();
-
     long userId = userEntity.getKey().getId();
 
-    if(task.getCreatorId()== userId && !task.isAssigned()) {
-      Query query = new Query("TaskApplicants").addSort("creationTime", SortDirection.DESCENDING);
-      Filter taskIdFilter = new FilterPredicate("taskId", FilterOperator.EQUAL,Long.toString(task.getId()));
-      query.setFilter(taskIdFilter);
+    if(task.getCreatorId() == userId && !task.isAssigned()) {
+      Filter taskIdFilter = new FilterPredicate("taskId", FilterOperator.EQUAL, task.getId());
+      query = new Query("TaskApplicants").setFilter(taskIdFilter);
       PreparedQuery results = datastore.prepare(query);
-        for (Entity assigneeEntity : results.asIterable()) {
-            taskAssigneeList.add((String) assigneeEntity.getProperty("applicantId"));
-            System.out.println("Check");
-        }
+      for (Entity assigneeEntity : results.asIterable()) {
+        taskAssigneeList.add(Long.parseLong(assigneeEntity.getProperty("applicantId").toString()));
+      }
       //Dummy data
-      taskAssigneeList.add("First Assignee");
-      taskAssigneeList.add("Second Assignee");
     }
-    task.setTaskAssigneeList(taskAssigneeList);
+    taskData.add("task", gson.toJsonTree(task));
+    taskData.add("taskAssigneeList", gson.toJsonTree(taskAssigneeList));
     System.out.println(taskAssigneeList);
-    Gson gson = new Gson();
+    System.out.println(taskData);
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(task));
+    response.getWriter().println(taskData);
   }
 
   /**

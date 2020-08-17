@@ -5,16 +5,17 @@ function viewTaskDetails() {
       return response.json();
   }).then((response) => {
       const taskContainer = document.getElementById('task-container');
-      taskContainer.innerHTML = '<h1>' + response.title + '</h1>';
-      taskContainer.innerHTML += '<p>' + response.details + "</p>";
-      taskContainer.innerHTML += '<p><strong>Location</strong>: ' + response.address + "</p>";
-      var deadline = new Date(response.deadline).toUTCString();
+      taskContainer.innerHTML = '<h1>' + response.task.title + '</h1>';
+      taskContainer.innerHTML += '<p>' + response.task.details + "</p>";
+      taskContainer.innerHTML += '<p><strong>Location</strong>: ' + response.task.address + "</p>";
+      var deadline = new Date(response.task.deadline).toUTCString();
       taskContainer.innerHTML += '<p><strong>Task Deadline</strong>: ' + deadline + "</p>";
-      taskContainer.innerHTML += '<p><strong>Created By</strong>: ' + response.creatorId + "</p>";
-      taskContainer.innerHTML += '<p><strong>Compensation</strong>: ' + response.compensation + "</p>";
-      loadAssigneeList(response.taskAssigneeList, response.id)
+      taskContainer.innerHTML += '<p><strong>Created By</strong>: ' + response.task.creatorId + "</p>";
+      taskContainer.innerHTML += '<p><strong>Compensation</strong>: ' + response.task.compensation + "</p>";
+      loadAssigneeList(response.taskAssigneeList, response.task.id)
   })
 } 
+
 
 /* 
  * Function to load task assignees list
@@ -27,18 +28,10 @@ function loadAssigneeList(taskAssigneeList, taskId) {
     let assign = taskAssigneeList[i];
     assignButton.innerHTML = "Assign";
     assignButton.onclick = function() {
-      let data = {"assigneeId": assign, "taskId": taskId};
-      const options = {
-        method : 'POST' ,
-        headers : {
-          'Content-type' : 'application/json'
-        },
-        body : JSON.stringify(data)
-      };
-      console.log(options);
-      fetch('task/assign',options).then((response) => {
-        console.log(response);
-      })
+      var ajaxPostRequest = new XMLHttpRequest();
+      ajaxPostRequest.open("POST", "/task/assign");
+      ajaxPostRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      ajaxPostRequest.send("taskId=" + taskId + "&assigneeId=" + assign);
     }
     var assignee = document.createElement('button');
     assignee.innerHTML = taskAssigneeList[i];
