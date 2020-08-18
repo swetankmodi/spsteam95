@@ -31,7 +31,7 @@ public final class User {
    *
    * @return The User object corresponding to the email, if the user is registered in datastore.
    *         If no such entity is stored in datastore, then it returns null.
-   * @param userEmail User e-mail id.
+   * @param User e-mail id.
    */
   public static User getUserFromEmail(String userEmail) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -60,7 +60,7 @@ public final class User {
    *
    * @return The User object corresponding to the id, if the user is registered in datastore.
    *         If no such entity is stored in datastore, then it returns null.
-   * @param userEmail User id in datastore
+   * @param User id in datastore
    */
   public static User getUserFromId(long id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

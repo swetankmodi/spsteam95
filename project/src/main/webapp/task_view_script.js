@@ -36,13 +36,6 @@ function loadApplyButton(taskId){
   taskApplyContainer.append(applyButton);
 }
 
-function isNumberKey(evt){
-  var charCode = (evt.which) ? evt.which : event.keyCode
-  if (charCode > 31 && (charCode < 48 || charCode > 57))
-    return false;
-  return true;
-}
-
 function loadRateUserInputBox(taskId, assigneeId){
 
   let rate = document.createElement('textarea');

@@ -41,8 +41,8 @@ public class UserDetailsServlet extends HttpServlet {
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(user));
-  
   }
+
   private Long getParameter(HttpServletRequest request, String name, Long defaultValue) {
     Long value = Long.parseLong(request.getParameter(name));
     if (value == null) {
@@ -51,4 +51,3 @@ public class UserDetailsServlet extends HttpServlet {
     return value;
   }
 }
-

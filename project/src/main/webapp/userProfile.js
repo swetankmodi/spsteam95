@@ -35,7 +35,6 @@ function addProfileDetailsToDOM() {
   })
 } 
 
-
 window.onload = () => {
   addProfileDetailsToDOM();
 }
