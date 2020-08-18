@@ -1,5 +1,5 @@
 function addProfileDetailsToDOM(){
-  fetch('/profile').then(response => response.json()).then(user => {
+  fetch('/profile/my').then(response => response.json()).then(user => {
 
     //Set the name, email, phone and rating to the previous filled data
     var name = user.name;

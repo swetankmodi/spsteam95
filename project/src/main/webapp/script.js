@@ -27,9 +27,12 @@ function loggedInView(status){
   loggedinSay.innerHTML = 'You are logged in as <strong>';
   loggedinSay.innerHTML += status.email;
   loggedinSay.innerHTML += '</strong>. <a href =\"' + status.logoutUrl + '\">Log out</a>.';
+  console.log(status.userId);
 
+  var str = "My Profile";
+  var result = str.link("/userProfile.html?userId=" + status.userId);
   let myProfile = document.createElement('p');
-  myProfile.innerHTML = '<a href ="userProfile.html">My Profile</a>.'
+  myProfile.innerHTML = result;
 
   loggedinSay.appendChild(myProfile);
 

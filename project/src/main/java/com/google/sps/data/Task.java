@@ -26,7 +26,6 @@ public final class Task {
   private long assigneeId;
   private float completionRating;
   private boolean active;
-  private List<String> taskAssigneeList;
 
   /**
    * Parametrized constructor for a Task that sets creationTime to current Server time.
@@ -101,17 +100,17 @@ public final class Task {
     }
 
     long id = entity.getKey().getId();
-    String title = (String) entity.getProperty("title");
-    String details = (String) entity.getProperty("details");
-    long creationTime = (long) entity.getProperty("creationTime");
-    long compensation = (long) entity.getProperty("compensation");
-    long creatorId = (long) entity.getProperty("creatorId");
-    long deadline = (long) entity.getProperty("deadline");
-    String address = (String) entity.getProperty("address");
-    boolean assigned = (boolean) entity.getProperty("assigned");
-    long assigneeId = (long) entity.getProperty("assigneeId");
-    float completionRating = ((Double) entity.getProperty("completionRating")).floatValue();
-    boolean active = (boolean) entity.getProperty("active");
+    String title = entity.getProperty("title").toString();
+    String details = entity.getProperty("details").toString();
+    long creationTime = Long.parseLong(entity.getProperty("creationTime").toString());
+    long compensation = Long.parseLong(entity.getProperty("compensation").toString());
+    long creatorId = Long.parseLong(entity.getProperty("creatorId").toString());
+    long deadline = Long.parseLong(entity.getProperty("deadline").toString());
+    String address = entity.getProperty("address").toString();
+    boolean assigned = Boolean.parseBoolean(entity.getProperty("assigned").toString());
+    long assigneeId = Long.parseLong(entity.getProperty("assigneeId").toString());
+    float completionRating = Float.parseFloat(entity.getProperty("completionRating").toString());
+    boolean active = Boolean.parseBoolean(entity.getProperty("active").toString());
 
     Task task = new Task(id, title, details, creationTime, compensation, creatorId, deadline,
         address, assigned, assigneeId, completionRating, active);
@@ -219,10 +218,6 @@ public final class Task {
   /** Sets the Task Completion Rating. */
   public void setCompletionRating(float completionRating) {
     this.completionRating = completionRating;
-  }
-
-  public void setTaskAssigneeList(List<String> taskAssigneeList){
-    this.taskAssigneeList = taskAssigneeList;
   }
 
 
