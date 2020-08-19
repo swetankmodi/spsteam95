@@ -1,5 +1,6 @@
 /* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ruda:wght@700&display=swap');
 
 body {
   background-color: #1B1B1E;
@@ -8,6 +9,10 @@ body {
 nav a.navbar-brand {
   font-family: 'Teko', sans-serif;
   color: #F6AA1C !important;
+}
+
+nav .nav-item .nav-link {
+  font-family: 'Ruda', sans-serif;
 }
 
 a {
