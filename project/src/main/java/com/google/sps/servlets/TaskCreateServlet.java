@@ -28,7 +28,24 @@ public class TaskCreateServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    request.getRequestDispatcher("/task_create.html").forward(request, response);
+    UserService userService = UserServiceFactory.getUserService();
+    
+    // If not logged in, redirect to landing page
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/");
+      return;
+    }
+
+    // Get Logged-in User details
+    User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
+    if (loggedInUser == null) {
+      // User is not added in datastore, redirect to landing page
+      response.sendRedirect("/");
+      return;
+    }
+    
+    // Dispatch request to task creation
+    request.getRequestDispatcher("/WEB-INF/jsp/task-create.jsp").forward(request, response);
   }
 
   @Override
