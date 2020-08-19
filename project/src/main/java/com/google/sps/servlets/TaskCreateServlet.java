@@ -29,7 +29,7 @@ public class TaskCreateServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     UserService userService = UserServiceFactory.getUserService();
-    
+
     // If not logged in, redirect to landing page
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/");
@@ -38,20 +38,21 @@ public class TaskCreateServlet extends HttpServlet {
 
     // Get Logged-in User details
     User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
-    if (loggedInUser == null) {
-      // User is not added in datastore, redirect to landing page
+    if ((loggedInUser == null) || (!loggedInUser.isProfileComplete())) {
+      // User is not added in datastore or has not completed profile, redirect to landing page
       response.sendRedirect("/");
       return;
     }
-    
+
     // Dispatch request to task creation
+    request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
     request.getRequestDispatcher("/WEB-INF/jsp/task-create.jsp").forward(request, response);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
-    
+
     // If not logged in, do not create new task
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/index.html");
@@ -160,4 +161,3 @@ public class TaskCreateServlet extends HttpServlet {
   }
 
 }
-
