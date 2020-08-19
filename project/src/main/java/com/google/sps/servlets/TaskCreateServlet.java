@@ -46,6 +46,7 @@ public class TaskCreateServlet extends HttpServlet {
 
     // Dispatch request to task creation
     request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
+    request.setAttribute("loggedInUser", loggedInUser);
     request.getRequestDispatcher("/WEB-INF/jsp/task-create.jsp").forward(request, response);
   }
 

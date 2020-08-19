@@ -1,5 +1,11 @@
+body {
+  background-image: url("/static/images/background/task-create-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 div.formCard {
-    background-color: #4C5C68;
+    background-color: #472d309e;
     padding: 20px 40px 8px 2px;
     border-radius: 5px;
 }
@@ -12,7 +18,7 @@ label.formLabel {
 p.formHeader {
     padding-left: 40px;
     font-size: 32px;
-    color: #25223C;
+    color: #C44536D9;
 }
 
 .form-control{
