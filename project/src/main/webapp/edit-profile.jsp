@@ -53,8 +53,6 @@
           </div>
         </div>
 
-        
-
         <%-- Name --%>
         <div class="form-group row">
           <label class='col-form-label col-lg-2 flexRightRow formLabel' for="name"><strong>Name</strong></label>
