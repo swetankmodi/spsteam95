@@ -1,0 +1,19 @@
+indexes:
+
+- kind: Task
+  properties:
+  - name: creatorId
+  - name: creationTime
+    direction: desc
+
+- kind: Task
+  properties:
+  - name: assigneeId
+  - name: creationTime
+    direction: desc
+
+- kind: TaskApplicants
+  properties:
+  - name: taskId
+  - name: creationTime
+    direction: desc

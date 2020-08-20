@@ -89,5 +89,8 @@ public final class User {
     return this.name;
   }
 
-}
+  public boolean isProfileComplete() {
+    return (this.name.length() > 0);
+  }
 
+}

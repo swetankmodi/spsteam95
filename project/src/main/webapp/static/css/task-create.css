@@ -1,0 +1,41 @@
+body {
+  background-image: url("/static/images/background/task-create-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+div.formCard {
+  background-color: #472d309e;
+  padding: 20px 40px 8px 2px;
+  border-radius: 5px;
+}
+
+label.formLabel {
+  color: #A6A2A2;
+  font-size: 18px;
+}
+
+small.formPlaintext {
+  color: #EFE4D9;
+  font-size: 18px;
+}
+
+p.formHeader {
+  padding-left: 40px;
+  font-size: 32px;
+  color: #C44536D9;
+}
+
+.form-control{
+  background-color:#2B4141;
+  color: #C8C2AE;
+}
+
+.form-control:focus{
+  background-color:#636B61;
+  color: #E3D7FF;
+}
+
+::placeholder {
+  color: rgba(185, 216, 194, 0.4) !important;
+}
