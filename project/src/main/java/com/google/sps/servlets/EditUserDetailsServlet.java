@@ -26,7 +26,7 @@ public class EditUserDetailsServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.sendRedirect("/editProfile.html");
+    response.sendRedirect("/edit-profile.jsp");
   }
 
 

@@ -20,7 +20,7 @@ function loadLoginLogoutView() {
 function loggedInView(status){
   //If the user has incomplete profile, redirect to editProfile.html
   if(status.editDetails){
-    window.location.href = 'editProfile.html';
+    window.location.href = 'edit-profile.jsp';
   }
 
   let loggedinSay = document.createElement('p');
