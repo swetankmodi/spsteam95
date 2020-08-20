@@ -6,6 +6,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.User;
+import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,13 +41,13 @@ public class HomeServlet extends HttpServlet {
         userEntity.setProperty("phone", "");
         userEntity.setProperty("rating", 0.0);
         datastore.put(userEntity);
-        request.sendRedirect("/profile/edit");
+        response.sendRedirect("/profile/edit");
         return;
       }
 
       if (!loggedInUser.isProfileComplete()) {
         // The current user already exists but has dummy details
-        request.sendRedirect("/profile/edit");
+        response.sendRedirect("/profile/edit");
         return;
       }
 
@@ -61,7 +62,8 @@ public class HomeServlet extends HttpServlet {
   }
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
     doGet(request, response);
   }
 
