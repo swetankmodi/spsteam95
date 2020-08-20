@@ -70,7 +70,7 @@ function loadTasks() {
     for (task of response.tasks) {
       let taskEntry = document.createElement('li');
       let taskLink = document.createElement('a');
-      taskLink.href = '/task_view.html?taskId=' + task.id;
+      taskLink.href = '/task-view.html?taskId=' + task.id;
       taskLink.innerText = task.title;
       taskEntry.appendChild(taskLink);
       taskList.appendChild(taskEntry);

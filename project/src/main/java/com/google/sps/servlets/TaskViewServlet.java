@@ -102,6 +102,8 @@ public class TaskViewServlet extends HttpServlet {
     taskData.add("taskAssigneeList", gson.toJsonTree(taskAssigneeList));
     taskData.addProperty("isCreator", task.getCreatorId() == userId);
     taskData.addProperty("isCurrentUserAlreadyApplied", isCurrentUserAlreadyApplied);
+    taskData.addProperty("loggedInUserId", userId);
+    taskData.addProperty("userLogoutUrl", userService.createLogoutURL("/"));
     response.setContentType("application/json;");
     response.getWriter().println(taskData);
   }
