@@ -45,10 +45,9 @@
 
         <div class="container">
           <div class="row">
-  
+            <small id="email" style = "text-align: right;" class="form-control-plaintext formPlaintext"></small>
             <div class="col-lg-5">
-              <p class="formHeader" type="text" name="email" id="email" autocomplete="off" ></p>
-              <p class="formHeader" type="text" name="rating" id="rating" autocomplete="off" ></p>
+              <p class="formHeader">Edit your profile</p>
             </div>
           </div>
         </div>
@@ -65,7 +64,7 @@
         <div class="form-group row">
           <label class='col-form-label col-lg-2 flexRightRow formLabel' for="phone"><strong>Phone no</strong></label>
           <div class="col">
-            <input class='form-control' type="number" name="phone" id="phone" placeholder="98XXXXXXXX" autocomplete="off" >
+            <input class='form-control' type="text" name="phone" id="phone" placeholder="98XXXXXXXX" autocomplete="off" >
           </div>
         </div>
 
