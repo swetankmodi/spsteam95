@@ -34,6 +34,16 @@ p.taskHeader {
   color: #E3D7FF;
 }
 
+.form-control{
+  background-color:#2B4141;
+  color: #C8C2AE;
+}
+
+.form-control:focus{
+  background-color:#636B61;
+  color: #E3D7FF;
+}
+
 ::placeholder {
   color: rgba(185, 216, 194, 0.4) !important;
 }

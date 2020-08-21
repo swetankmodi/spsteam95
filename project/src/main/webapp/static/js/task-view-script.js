@@ -14,7 +14,7 @@ function viewTaskDetails() {
       document.getElementById('taskLocation').innerHTML = response.task.address;
       var deadline = new Date(response.task.deadline).toUTCString();
       document.getElementById('taskDeadline').innerHTML = deadline;
-      document.getElementById('taskCreatedBy').innerHTML = response.creatorId;
+      document.getElementById('taskCreatedBy').innerHTML = response.task.creatorId;
       document.getElementById('taskCompensation').innerHTML = response.task.compensation;
       
       console.log(response.isCurrentUserAlreadyApplied);
@@ -43,36 +43,41 @@ function loadApplyButton(taskId){
 }
 
 function loadRateUserInputBox(taskId, assigneeId){
-
-  let rate = document.createElement('textarea');
-  rate.className = 'text';
+  let rate = document.createElement('input');
+  rate.className = 'form-control col-lg-2';
+  rate.type = "text";
   rate.name = 'rating';
   rate.style = "margin-right:16px";
+  rate.placeholder = "Give Assignee Rating"
+  rate.required = true;
 
   let id1 = document.createElement('textarea');
   id1.className = 'text';
   id1.name = 'taskId';
   id1.value = taskId;
-  id1.style = "margin-right:16px";
+  id1.hidden = true;
 
   let id2 = document.createElement('textarea');
   id2.className = 'text';
   id2.name = 'assigneeId';
   id2.value = assigneeId;
-  id2.style = "margin-right:16px";
+  id2.hidden = true;
 
   let ratingSubmit = document.createElement('input');
-  ratingSubmit.className = 'btn btn-success'
+  ratingSubmit.className = 'btn btn-success col-lg-1'
   ratingSubmit.type = 'submit';
-  ratingSubmit.value = 'Post';
+  ratingSubmit.value = 'Rate';
 
   let rateForm = document.createElement('form');
   rateForm.method = 'POST';
   rateForm.action = '/task/rate';
-  rateForm.appendChild(rate);
-  rateForm.appendChild(id1);
-  rateForm.appendChild(id2);
-  rateForm.appendChild(ratingSubmit);
+  let rateRow = document.createElement('div');
+  rateRow.className = "row";
+  rateRow.appendChild(rate);
+  rateRow.appendChild(id1);
+  rateRow.appendChild(id2);
+  rateRow.appendChild(ratingSubmit);
+  rateForm.appendChild(rateRow);
   document.querySelector('div.' + 'task-rate')
           .appendChild(rateForm);
 }
