@@ -9,7 +9,6 @@ function addProfileDetailsToDOM(){
       document.getElementById("name").value = name;
       document.getElementById("email").textContent = email;
       document.getElementById("phone").value = phone;
-      document.getElementById("rating").textContent = "Rating: " + rating;
       
     });
   }
