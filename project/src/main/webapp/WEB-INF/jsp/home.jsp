@@ -60,7 +60,7 @@
           </div>
 
           <div class="col form-inline">
-            <span class="form-control-sm sort-filter-options" style="padding-top: 1px;">Sort by </span>
+            <span class="form-control-sm sort-filter-options" style="padding-top: 6px;">Sort by </span>
 
             <select id="taskSortOption" class="form-control-sm sort-filter-options">
               <option>Deadline</option>
