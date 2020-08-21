@@ -1,0 +1,71 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap');
+
+body {
+  padding-bottom: 40px;
+}
+
+.sortFilterDiv {
+  padding: 20px 10px;
+}
+
+.sort-filter-options {
+  color: #D8DBE2;
+  outline: none;
+  border: none;
+  background-color: inherit;
+  width: auto;
+}
+
+.sort-filter-options option {
+  background-color: #1A1A1E;
+}
+
+.task-node {
+  padding: 10px 20px 10px 20px;
+  background-color: #373F51;
+  margin-bottom: 1px;
+  position: relative;
+}
+
+.task-node:first-child {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.task-node:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.task-first-line {
+  overflow: hidden;
+  line-height: 40px;
+}
+
+.task-first-line .task-title {
+  color: #D8DBE2;
+  margin-right: 8px;
+  font-size: 25px;
+  float: left;
+  line-height: inherit;
+}
+
+.task-first-line .task-compensation {
+  font-size: 19px;
+  font-family: 'Baloo Tamma 2', cursive;
+  color: #D7D5D57A;
+  float: right;
+  line-height: inherit;
+}
+
+.task-second-line {
+  overflow: hidden;
+}
+
+.task-second-line .task-deadline {
+  font-size: 16px;
+  font-family: 'Strait', sans-serif;
+  color: #999799;
+  line-height: inherit;
+}

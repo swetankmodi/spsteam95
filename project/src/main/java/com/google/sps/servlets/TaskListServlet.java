@@ -43,14 +43,33 @@ public class TaskListServlet extends HttpServlet {
       throws IOException {
     String uriInfo = request.getRequestURI();
     UserService userService = UserServiceFactory.getUserService();
-    
+
     if (!userService.isUserLoggedIn()) {
       return;
     }
 
     // Define the Query
-    Query query = new Query("Task").addSort("creationTime", SortDirection.DESCENDING);
+    Query query = new Query("Task");
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(PAGE_SIZE);
+
+    // Add required sort
+    String sortOptionString = getParameter(request, "sortOption", "Deadline");
+    String sortDirectionString = getParameter(request, "sortDirection", "Descending");
+
+    SortDirection sortDirection;
+    if (sortDirectionString.equals("Ascending")) {
+      sortDirection = SortDirection.ASCENDING;
+    } else {
+      sortDirection = SortDirection.DESCENDING;
+    }
+
+    if (sortOptionString.equals("Creation")) {
+      query.addSort("creationTime", sortDirection);
+    } else if (sortOptionString.equals("Compensation")) {
+      query.addSort("compensation", sortDirection);
+    } else {
+      query.addSort("deadline", sortDirection);
+    }
 
     // If this servlet is passed a cursor parameter, use it.
     String startCursor = request.getParameter("cursor");
@@ -112,5 +131,21 @@ public class TaskListServlet extends HttpServlet {
     doGet(request, response);
   }
 
-}
+  /**
+   * If present, get the request parameter identified by name, else return defaultValue.
+   *
+   * @param request The HTTP Servlet Request.
+   * @param name The name of the rquest parameter.
+   * @param defaultValue The default value to be returned if required parameter is unspecified.
+   * @return The request parameter, or the default value if the parameter
+   *         was not specified by the client
+   */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
+  }
 
+}
