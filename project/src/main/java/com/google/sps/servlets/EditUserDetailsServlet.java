@@ -26,7 +26,7 @@ public class EditUserDetailsServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.sendRedirect("/editProfile.html");
+    response.sendRedirect("/edit-profile.jsp");
   }
 
 
@@ -38,13 +38,7 @@ public class EditUserDetailsServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     String userEmail = userService.getCurrentUser().getEmail();
     String name = request.getParameter("name");
-    String email = request.getParameter("email");
     String phone = request.getParameter("phone");
-    float rating = Float.parseFloat(request.getParameter("rating"));
-
-    if(!userEmail.equals(email)){
-      return;
-    }
 
     Filter emailFilter = new FilterPredicate("email", Query.FilterOperator.EQUAL, userEmail);
     Query query = new Query("User").setFilter(emailFilter);
