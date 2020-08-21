@@ -50,6 +50,33 @@
 
     <c:if test="${isLoggedIn}">
 
+      <div class="container">
+        <div class="row sortFilterDiv">
+          <div class="col-2">
+            <a href="/task/create" class="btn btn-sm btn-outline-success createButton">Create Task</a>
+          </div>
+
+          <div class="col-6">
+          </div>
+
+          <div class="col form-inline">
+            <span class="form-control-sm sort-filter-options">Sort by </span>
+
+            <select id="taskSortOption" class="form-control-sm sort-filter-options">
+              <option>Deadline</option>
+              <option>Creation</option>
+              <option>Compensation</option>
+            </select>
+
+            <select id="taskSortDirection" class="form-control-sm sort-filter-options">
+              <option>Ascending</option>
+              <option>Descending</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
       <div class="container taskListDiv">
       </div>
 

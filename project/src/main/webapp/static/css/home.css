@@ -5,6 +5,22 @@ body {
   padding-bottom: 40px;
 }
 
+.sortFilterDiv {
+  padding: 20px 10px;
+}
+
+.sort-filter-options {
+  color: #D8DBE2;
+  outline: none;
+  border: none;
+  background-color: inherit;
+  width: auto;
+}
+
+.sort-filter-options option {
+  background-color: #1A1A1E;
+}
+
 .task-node {
   padding: 10px 20px 10px 20px;
   background-color: #373F51;
@@ -13,7 +29,6 @@ body {
 }
 
 .task-node:first-child {
-  margin-top: 40px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
