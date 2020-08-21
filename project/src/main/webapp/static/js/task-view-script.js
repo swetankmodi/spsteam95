@@ -4,14 +4,18 @@ function viewTaskDetails() {
   fetch('/task?' + queryParams).then((response) => {
       return response.json();
   }).then((response) => {
-      const taskContainer = document.getElementById('task-container');
-      taskContainer.innerHTML = '<h1>' + response.task.title + '</h1>';
-      taskContainer.innerHTML += '<p>' + response.task.details + "</p>";
-      taskContainer.innerHTML += '<p><strong>Location</strong>: ' + response.task.address + "</p>";
+      const profileUrl = document.getElementById('profile-url');
+      profileUrl.innerHTML = '<a class="nav-link" href="/userProfile.html?userId=' + response.loggedInUserId + '">Profile</a>';
+      const logoutButton = document.getElementById('logout-button');
+      logoutButton.innerHTML = '<a class="btn btn-sm btn-outline-danger" href="' + response.userLogoutUrl + '">Logout</a>';
+
+      document.getElementById('taskTitle').innerText = response.task.title;
+      document.getElementById('taskDetails').innerHTML = response.task.details;
+      document.getElementById('taskLocation').innerHTML = response.task.address;
       var deadline = new Date(response.task.deadline).toUTCString();
-      taskContainer.innerHTML += '<p><strong>Task Deadline</strong>: ' + deadline + "</p>";
-      taskContainer.innerHTML += '<p><strong>Created By</strong>: ' + response.task.creatorId + "</p>";
-      taskContainer.innerHTML += '<p><strong>Compensation</strong>: ' + response.task.compensation + "</p>";
+      document.getElementById('taskDeadline').innerHTML = deadline;
+      document.getElementById('taskCreatedBy').innerHTML = response.task.creatorId;
+      document.getElementById('taskCompensation').innerHTML = response.task.compensation;
       
       console.log(response.isCurrentUserAlreadyApplied);
       if(!response.isCreator && !response.task.assigned && !response.isCurrentUserAlreadyApplied)
@@ -25,6 +29,8 @@ function viewTaskDetails() {
 function loadApplyButton(taskId){
   var taskApplyContainer = document.getElementById('task-apply');
   var applyButton = document.createElement('button');
+  applyButton.className = "btn btn-success";
+  
   applyButton.innerHTML = "Apply for this task !";
   applyButton.onclick = function() {
     var ajaxPostRequest = new XMLHttpRequest();
@@ -37,33 +43,41 @@ function loadApplyButton(taskId){
 }
 
 function loadRateUserInputBox(taskId, assigneeId){
-
-  let rate = document.createElement('textarea');
-  rate.className = 'text';
+  let rate = document.createElement('input');
+  rate.className = 'form-control col-lg-2';
+  rate.type = "text";
   rate.name = 'rating';
+  rate.style = "margin-right:16px";
+  rate.placeholder = "Give Assignee Rating"
+  rate.required = true;
 
   let id1 = document.createElement('textarea');
   id1.className = 'text';
   id1.name = 'taskId';
   id1.value = taskId;
+  id1.hidden = true;
 
   let id2 = document.createElement('textarea');
   id2.className = 'text';
   id2.name = 'assigneeId';
   id2.value = assigneeId;
+  id2.hidden = true;
 
   let ratingSubmit = document.createElement('input');
-  ratingSubmit.className = 'button_color'
+  ratingSubmit.className = 'btn btn-success col-lg-1'
   ratingSubmit.type = 'submit';
-  ratingSubmit.value = 'Post';
+  ratingSubmit.value = 'Rate';
 
   let rateForm = document.createElement('form');
   rateForm.method = 'POST';
   rateForm.action = '/task/rate';
-  rateForm.appendChild(rate);
-  rateForm.appendChild(id1);
-  rateForm.appendChild(id2);
-  rateForm.appendChild(ratingSubmit);
+  let rateRow = document.createElement('div');
+  rateRow.className = "row";
+  rateRow.appendChild(rate);
+  rateRow.appendChild(id1);
+  rateRow.appendChild(id2);
+  rateRow.appendChild(ratingSubmit);
+  rateForm.appendChild(rateRow);
   document.querySelector('div.' + 'task-rate')
           .appendChild(rateForm);
 }
@@ -76,6 +90,7 @@ function loadAssigneeList(taskAssigneeList, taskId) {
   var taskAssigneeContainer = document.getElementById('task-assignee-list');
   for( i=0;i<taskAssigneeList.length;i++) {
     var assignButton = document.createElement('button');
+    assignButton.className = "btn btn-success";
     let assign = taskAssigneeList[i];
     assignButton.innerHTML = "Assign";
     assignButton.onclick = function() {
@@ -89,11 +104,13 @@ function loadAssigneeList(taskAssigneeList, taskId) {
     assignee.innerHTML = taskAssigneeList[i];
     assignee.onclick = function(){
       location.href = '/userProfile.html?userId=' + assign;
-    }
+    }    
     var assigneeContainer = document.createElement('li');
+    assignee.style = 'margin-right:16px'
     assigneeContainer.append(assignee);
     assigneeContainer.append(assignButton);
     taskAssigneeContainer.append(assigneeContainer);
+    taskAssigneeContainer.append(document.createElement("p"));
   }
 }
 

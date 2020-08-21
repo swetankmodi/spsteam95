@@ -53,7 +53,7 @@ public class RateTaskServlet extends HttpServlet {
     taskEntity.setProperty("completionRating", completionRating);
     taskEntity.setProperty("active", false);
     datastore.put(taskEntity);
-    response.sendRedirect("/task_view.html?taskId=" + String.valueOf(taskId));
+    response.sendRedirect("/task-view.html?taskId=" + String.valueOf(taskId));
   }
 
   private long getParameter(HttpServletRequest request, String name, long defaultValue) {
