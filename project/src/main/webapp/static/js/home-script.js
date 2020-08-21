@@ -27,12 +27,23 @@ function constructTaskNode(task) {
 /*
  * Function to load tasks.
  */
-function loadTasks() {
+function loadTasks(refreshList = false) {
   let fetchURL = '/task/all';
+  let taskList = $('div.' + taskListDivClassName);
 
-  $.get(fetchURL, { cursor: taskListCursor }).done(function(response) {
-    // let response = JSON.parse(responseJSON);
-    let taskList = $('div.' + taskListDivClassName);
+  // If the list is to be refreshed, then cursor should be null
+  if (refreshList) {
+    taskListCursor = null;
+    taskList.empty();
+  }
+
+  let sortOption = $('#taskSortOption').val();
+  let sortDirection = $('#taskSortDirection').val();
+
+  $.get(fetchURL, { cursor: taskListCursor,
+                    sortOption: sortOption,
+                    sortDirection: sortDirection
+      }).done(function(response) {
 
     // Append Tasks to list
     for (task of response.tasks) {
@@ -59,4 +70,15 @@ window.addEventListener('scroll', function() {
 
 $(document).ready(function(){
   loadTasks();
+
+  // For Switching Sort Options
+  $('#taskSortOption').on('change',function(){
+    loadTasks(true);
+  });
+
+  // For Switching Sort Directions
+  $('#taskSortDirection').on('change',function(){
+    loadTasks(true);
+  });
+
 });
