@@ -71,7 +71,10 @@
         <%-- compensation --%>
         <div class="form-group row">
           <label class='col-form-label col-lg-2 flexRightRow formLabel' for="compensationInput"><strong>Compensation</strong></label>
-          <div class="col">
+          <div class="col input-group mb-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">&#x20B9;</div>
+            </div>
             <input class='form-control' type="number" name="compensation" id="compensationInput" placeholder="500" autocomplete="off" required>
           </div>
         </div>
