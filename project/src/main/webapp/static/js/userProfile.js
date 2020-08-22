@@ -18,8 +18,24 @@ function addProfileDetailsToDOM() {
     document.getElementById('userEmail').innerHTML = email;
     document.getElementById('userPhone').innerHTML = phone;
     document.getElementById('userRating').innerHTML = rating;
+
+    if(response.canEditProfile){
+      addEditProfileButtonToDom();
+    }
   })
 } 
+
+function addEditProfileButtonToDom(){
+  var editProfileContainer = document.getElementById('edit-profile');
+  var editButton = document.createElement('button');
+  editButton.className = "btn btn-success";
+  
+  editButton.innerHTML = "Edit profile";
+  editButton.onclick = function() {
+    window.location = '/profile/edit';
+  }
+  editProfileContainer.append(editButton);
+}
 
 window.onload = () => {
   addProfileDetailsToDOM();

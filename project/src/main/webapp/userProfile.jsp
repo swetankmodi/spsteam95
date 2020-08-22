@@ -93,10 +93,8 @@
         <p></p>
         
         <div class="row">
-          <div id="user-assignee-list"></div>
+          <div class="col-lg-12" id="edit-profile"></div>
         </div>
-
-        <div class="user-rate"></div>
       
       </div>
     </div>

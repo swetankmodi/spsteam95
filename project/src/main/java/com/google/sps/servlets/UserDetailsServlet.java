@@ -52,6 +52,7 @@ public class UserDetailsServlet extends HttpServlet {
     Gson gson = new Gson();
     userData.add("user", gson.toJsonTree(user));
     userData.addProperty("loggedInUserId", loggedInId);
+    userData.addProperty("canEditProfile", loggedInId == userId);
     userData.addProperty("userLogoutUrl", userService.createLogoutURL("/"));
     response.setContentType("application/json;");
     response.getWriter().println(userData);
