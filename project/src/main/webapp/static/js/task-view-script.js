@@ -5,7 +5,7 @@ function viewTaskDetails() {
       return response.json();
   }).then((response) => {
       const profileUrl = document.getElementById('profile-url');
-      profileUrl.innerHTML = '<a class="nav-link" href="/userProfile.html?userId=' + response.loggedInUserId + '">Profile</a>';
+      profileUrl.innerHTML = '<a class="nav-link" href="/userProfile.jsp?userId=' + response.loggedInUserId + '">Profile</a>';
       const logoutButton = document.getElementById('logout-button');
       logoutButton.innerHTML = '<a class="btn btn-sm btn-outline-danger" href="' + response.userLogoutUrl + '">Logout</a>';
 
@@ -103,7 +103,7 @@ function loadAssigneeList(taskAssigneeList, taskId) {
     var assignee = document.createElement('button');
     assignee.innerHTML = taskAssigneeList[i];
     assignee.onclick = function(){
-      location.href = '/userProfile.html?userId=' + assign;
+      location.href = '/userProfile.jsp?userId=' + assign;
     }    
     var assigneeContainer = document.createElement('li');
     assignee.style = 'margin-right:16px'

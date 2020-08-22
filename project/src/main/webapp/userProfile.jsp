@@ -4,15 +4,16 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>Edit | Profile</title>
+    <title> User | Details</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/master.css">
-    <link rel="stylesheet" href="/static/css/edit-profile.css">
+    <link rel="stylesheet" href="/static/css/user-profile.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
 
   <body>
-
-    <%-- Navbar Begins --%>
+    <!-- Navbar Begins -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <a class="navbar-brand" href="/">Door2Door</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,61 +28,85 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/userProfile.jsp?userId=${loggedInUser.id}">Profile</a>
+              <div id="profile-url"></div>
           </li>
         </ul>
 
-        <a class="btn btn-sm btn-outline-danger" href="${userLogoutUrl}">Logout</a>
+        <div id="logout-button"></div>
 
       </div>
     </nav>
-    <%-- Navbar ends --%>
+    <!-- Navbar ends -->
 
     <p></p>
+    
+    <div class="container userCard">
+      <div class="container">
+        <div class="row">
 
-    <div class="container formCard">
+          <div class="col-lg-12">
+            <strong><p class="userHeader" id="userTitle"></p></strong>
+          </div>
 
-      <form action="/profile/edit" method="POST" name="edit-user-details">
+        </div>
+      </div>
+      <hr>
+      <div class="container">
+        <!-- Details -->
 
-        <div class="container">
-          <div class="row">
-            <small id="email" style = "text-align: right;" class="form-control-plaintext formPlaintext"></small>
-            <div class="col-lg-5">
-              <p class="formHeader">Edit your profile</p>
-            </div>
+        <!-- Name -->
+        <div class="row">
+          <div class="col-lg-2 userLabel">
+            <strong>Name: </strong>
+          </div>
+          <div class="col-lg-10 userValue" id="userName">
           </div>
         </div>
 
-        <%-- Name --%>
-        <div class="form-group row">
-          <label class='col-form-label col-lg-2 flexRightRow formLabel' for="name"><strong>Name</strong></label>
-          <div class="col">
-            <input class="form-control" type="text" name="name" id="name" placeholder="First name Last name" autocomplete="off" required>
+        <!-- Email -->
+        <div class="row">
+          <div class="col-lg-2 userLabel">
+            <strong>Email: </strong>
+          </div>
+          <div class="col-lg-10 userValue" id="userEmail">
           </div>
         </div>
 
-        <%-- phone no --%>
-        <div class="form-group row">
-          <label class='col-form-label col-lg-2 flexRightRow formLabel' for="phone"><strong>Phone no</strong></label>
-          <div class="col">
-            <input class='form-control' type="number" name="phone" id="phone" placeholder="XXXXXXXXXX" autocomplete="off" >
+        <!-- Phone -->
+        <div class="row">
+          <div class="col-lg-2 userLabel">
+            <strong>Phone: </strong>
+          </div>
+          <div class="col-lg-10 userValue" id="userPhone">
           </div>
         </div>
 
-        <%-- Submit button --%>
-        <div class="form-group row flexCenterRow">
-          <input class="btn btn-success" type="submit" name="submit" value="Submit">
+        <!-- Rating -->
+        <div class="row">
+          <div class="col-lg-2 userLabel">
+            <strong>Rating: </strong>
+          </div>
+          <div class="col-lg-10 userValue" id="userRating">
+          </div>
         </div>
 
-      </form>
+        <p></p>
+        
+        <div class="row">
+          <div id="user-assignee-list"></div>
+        </div>
 
+        <div class="user-rate"></div>
+      
+      </div>
     </div>
 
-    <%-- Bootstrap Scripts (JQuery, popper, bootstrap) --%>
+    <!-- Bootstrap Scripts (JQuery, popper, bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="/static/js/edit-profile.js"></script>
+    <script src="/static/js/userProfile.js" ></script>
   </body>
-
+  
+  
 </html>
