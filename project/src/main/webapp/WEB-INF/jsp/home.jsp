@@ -48,6 +48,10 @@
     </nav>
     <%-- Navbar ends --%>
 
+    <c:if test="${not isLoggedIn}">
+      <c:redirect url="/about.jsp"/>
+    </c:if>
+
     <c:if test="${isLoggedIn}">
 
       <div class="container">

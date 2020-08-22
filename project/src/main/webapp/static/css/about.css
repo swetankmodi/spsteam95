@@ -1,0 +1,46 @@
+/* Template Overrides */
+
+body {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/static/images/background/about.jpg") !important;  
+} 
+
+.container{
+    margin-top: 20px;
+}
+
+.jumbotron .text-center.fly-down {
+	position: fixed;
+	bottom: 0;
+	animation: 1s fly-down ease-in forwards;
+}
+.jumbotron .text-center > * {
+    align-content: center;
+	opacity: 0;
+}
+.jumbotron .text-center .greeting {
+	animation: fade-in 1s ease-in forwards;
+}
+.jumbotron .text-center .user-message {
+	max-width: 50%;
+	text-align: center;
+	animation: fade-in 1.5s linear forwards;
+	animation-delay: 1.5s;
+}
+.jumbotron .text-center .toggle {
+	animation: fade-in 1s linear forwards;
+	animation-delay: 5s;
+}
+.jumbotron .text-center .btn {
+	animation: fade-in 1s linear forwards;
+	animation-delay: 6s;
+}
+
+/* Animations */
+@keyframes fade-in {
+	100% { opacity: 1; }
+}
+@keyframes fly-down {
+	100% { bottom: -5000px; }
+}
