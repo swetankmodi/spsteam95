@@ -20,100 +20,153 @@ import com.google.gson.JsonObject;
 import com.google.sps.data.Task;
 import com.google.sps.data.User;
 import java.io.IOException;
+import java.lang.NumberFormatException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
-import java.util.ArrayList;
-import java.util.List;
 
 /** Servlet facilitating viewing task details. */
-@WebServlet("/task")
+@WebServlet(urlPatterns = {"/task/view/*"})
 public class TaskViewServlet extends HttpServlet {
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private PreparedQuery pq;
-  private Query query;
+  private UserService userService = UserServiceFactory.getUserService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    long taskId = getParameter(request, "taskId", -1L);
-    
-    if (taskId == -1)
+    // If not logged in, redirect to landing page
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/");
       return;
-    
-    Entity entity;
+    }
 
+    // Get Logged-in User details
+    User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
+    if ((loggedInUser == null) || (!loggedInUser.isProfileComplete())) {
+      // User is not added in datastore or has not completed profile, redirect to landing page
+      response.sendRedirect("/");
+      return;
+    }
+
+    Long taskId = getTaskIdFromURI(request.getRequestURI());
+    if (taskId == null) {
+      response.getWriter().println("This task Id is invalid");
+      return;
+    }
+
+    // Get Task Object from ID
+    Entity taskEntity;
     try {
-      entity = datastore.get(KeyFactory.createKey("Task", taskId));
+      taskEntity = datastore.get(KeyFactory.createKey("Task", taskId));
     } catch (Exception e) {
       System.out.println(e);
       return;
     }
-    
-    //get user id
-    UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      return;
+    Task task = Task.getTaskFromDatastoreEntity(taskEntity);
+
+    // If deadline has passed, deactivate task
+    if (new Date(task.getDeadlineAsLong()).before(new Date())) {
+      task.deactivate();
     }
 
-    
-    String userEmail = userService.getCurrentUser().getEmail();
-    User user = User.getUserFromEmail(userEmail);
-    long userId = user.getId();
+    if (task.getCreatorId() == loggedInUser.getId()) {
+      // Logged in user is the creator of the task
+      request.setAttribute("isCreator", true);
+      request.setAttribute("creator", loggedInUser);
 
-    Task task = Task.getTaskFromDatastoreEntity(entity);
-    List<Long> taskAssigneeList = new ArrayList<>();
-    JsonObject taskData = new JsonObject();
-    Gson gson = new Gson();
-    
-    /*
-    If the current user is the creator of the task and the task is not already assigned, then send 
-    list of assignees to client
-    */
-    boolean isCurrentUserAlreadyApplied = false;
-    if(task.getCreatorId() == userId && !task.isAssigned()) {
-      Filter taskIdFilter =
-        new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
-      Query taskQuery = new Query("TaskApplicants").setFilter(taskIdFilter);
-      pq = datastore.prepare(taskQuery);
-      for (Entity assigneeEntity : pq.asIterable()) {
-        long applicantsId = Long.parseLong(assigneeEntity.getProperty("applicantId").toString());
-        taskAssigneeList.add(applicantsId);
+      // Prepare the list of applicants
+      List<User> taskApplicantList = new ArrayList<>();
+      Filter taskIdFilter = new FilterPredicate("taskId",
+          Query.FilterOperator.EQUAL, task.getId());
+      Query applicantsQuery = new Query("TaskApplicants").setFilter(taskIdFilter);
+      PreparedQuery preparedQuery = datastore.prepare(applicantsQuery);
+
+      for (Entity applicantEntity : preparedQuery.asIterable()) {
+        long applicantId = Long.parseLong(applicantEntity.getProperty("applicantId").toString());
+        User applicant = User.getUserFromId(applicantId);
+        taskApplicantList.add(applicant);
+      }
+      request.setAttribute("taskApplicantList", taskApplicantList);
+    } else {
+      // Logged in user is not the creator of the task
+      request.setAttribute("isCreator", false);
+
+      // Get creator details
+      User creator = User.getUserFromId(task.getCreatorId());
+      request.setAttribute("creator", creator);
+
+      Filter taskIdFilter = new FilterPredicate("taskId",
+          Query.FilterOperator.EQUAL, task.getId());
+      Filter applicantIdFilter = new FilterPredicate("applicantId",
+          Query.FilterOperator.EQUAL, loggedInUser.getId());
+      Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
+          Arrays.<Filter>asList(taskIdFilter, applicantIdFilter));
+
+      Query appliedQuery = new Query("TaskApplicants").setFilter(compositeFilter);
+      PreparedQuery preparedQuery = datastore.prepare(appliedQuery);
+
+      Entity applicantEntity = preparedQuery.asSingleEntity();
+      if (applicantEntity == null) {
+        // The logged in user has not applied for the task
+        request.setAttribute("hasApplied", false);
+      } else {
+        // The logged in user has applied for the task
+        request.setAttribute("hasApplied", true);
       }
     }
 
-    /*
-    To check if the current logged in User has already applied for the task
-    */
-    Filter taskIdFilter =
-        new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
-    Filter applicantFilter =
-        new FilterPredicate("applicantId", Query.FilterOperator.EQUAL, userId);
-    CompositeFilter taskApplicantFilter = CompositeFilterOperator.and(taskIdFilter, applicantFilter);
-    Query taskQuery = new Query("TaskApplicants").setFilter(taskApplicantFilter);
-    Entity applicantsEntity = datastore.prepare(taskQuery).asSingleEntity();
-    isCurrentUserAlreadyApplied = applicantsEntity != null;
+    // Get assignee details if any
+    if (task.isAssigned()) {
+      User assignee = User.getUserFromId(task.getAssigneeId());
+      request.setAttribute("assignee", assignee);
+    }
 
-    taskData.add("task", gson.toJsonTree(task));
-    taskData.add("taskAssigneeList", gson.toJsonTree(taskAssigneeList));
-    taskData.addProperty("isCreator", task.getCreatorId() == userId);
-    taskData.addProperty("isCurrentUserAlreadyApplied", isCurrentUserAlreadyApplied);
-    taskData.addProperty("loggedInUserId", userId);
-    taskData.addProperty("userLogoutUrl", userService.createLogoutURL("/"));
-    response.setContentType("application/json;");
-    response.getWriter().println(taskData);
+    request.setAttribute("task", task);
+    request.setAttribute("loggedInUser", loggedInUser);
+    request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
+
+    // Dispatch request to Task View
+    request.getRequestDispatcher("/WEB-INF/jsp/task-view.jsp")
+           .forward(request, response);
+  }
+
+  /**
+   * Returns the Task Id from the URI.
+   * @return The task ID, if a valid Id is there in the URI, else null.
+   * @param uri The request URI.
+   */
+  private Long getTaskIdFromURI(String uri) {
+    Long taskId;
+
+    try {
+      // Task ID starts from the string's 11th index
+      if (uri.charAt(uri.length() - 1) == '/') {
+        taskId = Long.parseLong(uri.substring(11, uri.length() - 1));
+      } else {
+        taskId = Long.parseLong(uri.substring(11));
+      }
+    } catch (NumberFormatException nfe) {
+      // Given URI does not contain parsable task ID
+      return null;
+    }
+
+    return taskId;
   }
 
   /**
    * If present, get the request parameter identified by name, else return defaultValue.
    *
+   * @return The request parameter, or the default value if the parameter
+   *         was not specified by the client
    * @param request The HTTP Servlet Request.
    * @param name The name of the rquest parameter.
    * @param defaultValue The default value to be returned if required parameter is unspecified.
-   * @return The request parameter, or the default value if the parameter
-   *         was not specified by the client
    */
   private Long getParameter(HttpServletRequest request, String name, Long defaultValue) {
     Long value = Long.parseLong(request.getParameter(name));
@@ -122,4 +175,5 @@ public class TaskViewServlet extends HttpServlet {
     }
     return value;
   }
+
 }

@@ -68,6 +68,9 @@ function constructTaskNode(task) {
  * Function to load tasks.
  */
 function loadTasks(refreshList = false) {
+  if(working)
+    return;
+  working = true;
   let fetchURL = '/task/completed';
   let taskList = $('div.' + taskListDivClassName);
 
@@ -112,7 +115,7 @@ window.addEventListener('scroll', function() {
   if (document.documentElement.scrollTop + document.documentElement.clientHeight
       >= document.documentElement.scrollHeight) {
     if (working === false) {
-      working = true;
+      //working = true;
       loadTasks();
     }
   }
