@@ -59,7 +59,7 @@ public class AssignTaskServlet extends HttpServlet {
 
     datastore.put(taskEntity);
 
-    response.sendRedirect("/task_view.html?taskId=" + String.valueOf(taskId));
+    response.sendRedirect("/task/view/" + String.valueOf(taskId));
   }
 
   private long getParameter(HttpServletRequest request, String name, long defaultValue) {

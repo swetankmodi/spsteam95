@@ -91,7 +91,7 @@ public class TaskCreateServlet extends HttpServlet {
     long taskId = datastore.put(taskEntity).getId();
 
     // Redirect to Task View to view the created task
-    response.sendRedirect("/task-view.html?taskId=" + String.valueOf(taskId));
+    response.sendRedirect("/task/view/" + String.valueOf(taskId));
   }
 
   /**
