@@ -80,6 +80,7 @@ function loadTasks(refreshList = false) {
   let sortOption = $('#taskSortOption').val();
   let sortDirection = $('#taskSortDirection').val();
   let taskType = $('#taskType').val();
+  
   if(taskType == 'Tasks Completed')
     fetchURL = '/task/completed';
   else if(taskType == 'Tasks Created')
@@ -99,6 +100,7 @@ function loadTasks(refreshList = false) {
       taskList.append(taskNode);
     }
 
+    /*Todo : Infinite Scrolling, was having some errors with cursor*/
     // Update cursor
     taskListCursor = response.nextCursor;
     working = false;

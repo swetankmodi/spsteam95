@@ -103,9 +103,9 @@
     </div>
     <div class="container">
       <div class="row sortFilterDiv">
-        <div class="col-2">
-          <a href="/task/create" class="btn btn-sm btn-outline-success createButton">Create Task</a>
-        </div>
+       
+        <h1 style="color: white">Tasks</h1>
+      
 
         <div class="col-6">
         </div>

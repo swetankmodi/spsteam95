@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.sps.data.User;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -36,10 +37,17 @@ public class MyProfileServlet extends HttpServlet {
       return;
     }
 
+    String userEmail = userService.getCurrentUser().getEmail();
+    User loggedInUser = User.getUserFromEmail(userEmail);
+    long loggedInId = loggedInUser.getId();
+
+    JsonObject userData = new JsonObject();
     Gson gson = new Gson();
+    userData.add("user", gson.toJsonTree(user));
+    userData.addProperty("loggedInUserId", loggedInId);
+    userData.addProperty("userLogoutUrl", userService.createLogoutURL("/"));
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(user));
-  
+    response.getWriter().println(userData);
   }
 }
 

@@ -47,3 +47,6 @@ p.userHeader {
 ::placeholder {
   color: rgba(185, 216, 194, 0.4) !important;
 }
+h1 { 
+  color: #00fff2; 
+}

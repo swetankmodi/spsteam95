@@ -27,11 +27,11 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/userProfile.jsp?userId=${loggedInUser.id}">Profile</a>
+              <div id="profile-url"></div>
           </li>
         </ul>
 
-        <a class="btn btn-sm btn-outline-danger" href="${userLogoutUrl}">Logout</a>
+        <div id="logout-button"></div>
 
       </div>
     </nav>
