@@ -28,13 +28,18 @@ import java.util.Date;
 public class AssignTaskServlet extends HttpServlet {
 
   @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    doPost(request, response);
+  }
+
+  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     long taskId = getParameter(request, "taskId", -1);
     if (taskId == -1)
       return;
 
     long assigneeId = getParameter(request, "assigneeId", -1);
-    
+
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       return;
@@ -48,12 +53,12 @@ public class AssignTaskServlet extends HttpServlet {
       System.out.println(e);
       return;
     }
-    
+
     taskEntity.setProperty("assigneeId", assigneeId);
     taskEntity.setProperty("assigned", true);
 
     datastore.put(taskEntity);
-    
+
     response.sendRedirect("/task_view.html?taskId=" + String.valueOf(taskId));
   }
 

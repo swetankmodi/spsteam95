@@ -89,6 +89,10 @@ public final class User {
     return this.name;
   }
 
+  public float getRating() {
+    return this.rating;
+  }
+
   public boolean isProfileComplete() {
     return (this.name.length() > 0);
   }

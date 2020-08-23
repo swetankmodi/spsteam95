@@ -6,14 +6,6 @@ import java.util.List;
 /** A Task. */
 public final class Task {
 
-  /*
-   * TODO:
-   * - add functions:
-   *   - addApplicant(id, appliedUsersList)
-   *   - assignTaskToUser(id, assignedTo, active)
-   *   - rateTaskAssignee(id, completionRating)
-   */
-
   private final long id;
   private String title;
   private String details;
@@ -232,4 +224,3 @@ public final class Task {
   }
 
 }
-

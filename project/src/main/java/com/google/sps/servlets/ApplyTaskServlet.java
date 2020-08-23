@@ -28,11 +28,16 @@ import javax.servlet.ServletException;
 public class ApplyTaskServlet extends HttpServlet {
 
   @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    doPost(request, response);
+  }
+
+  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Long taskId = getParameter(request, "taskId", -1);
     if (taskId == -1)
       return;
-    
+
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
         return;

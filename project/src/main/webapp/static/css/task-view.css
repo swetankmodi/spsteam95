@@ -15,35 +15,38 @@ div.taskCard {
   font-size: 18px;
 }
 
-small.formPlaintext {
-  color: #EFE4D9;
-  font-size: 18px;
-}
-
 p.taskHeader {
   padding-left: 40px;
   font-size: 32px;
   color: #C44536D9;
 }
 
-.taskValue{
+.taskValue {
   color: #C8C2AE;
+  font-size: 18px;
 }
 
-.taskValue:focus{
+.taskValue:focus {
   color: #E3D7FF;
 }
 
-.form-control{
-  background-color:#2B4141;
-  color: #C8C2AE;
+#taskDetails {
+  white-space: pre;
 }
 
-.form-control:focus{
-  background-color:#636B61;
-  color: #E3D7FF;
+div.applicantListDiv {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
 
-::placeholder {
-  color: rgba(185, 216, 194, 0.4) !important;
+div.applicantDiv {
+  margin: 7px auto 7px auto;
+  background-color: blanchedalmond;
+}
+
+.applicantListHeader {
+  font-weight: bold;
+  color: whitesmoke;
+  font-size: larger;
 }

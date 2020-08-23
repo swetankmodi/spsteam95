@@ -1,22 +1,18 @@
+/* Transforms integer deadline to Human Readable String */
+function formReadableDeadlineString() {
+  let deadline = new Date(parseInt($('#taskDeadline').text()));
+  let deadlineString = deadline.toLocaleString('en-US',
+      { hour: 'numeric', minute: 'numeric', hour12: true });
+  deadlineString += ', ' + deadline.toDateString();
+  $('#taskDeadline').text(deadlineString);
+}
+
 function viewTaskDetails() {
   var queryParams = new URLSearchParams(window.location.search);
   queryParams = queryParams.toString();
   fetch('/task?' + queryParams).then((response) => {
       return response.json();
   }).then((response) => {
-      const profileUrl = document.getElementById('profile-url');
-      profileUrl.innerHTML = '<a class="nav-link" href="/userProfile.html?userId=' + response.loggedInUserId + '">Profile</a>';
-      const logoutButton = document.getElementById('logout-button');
-      logoutButton.innerHTML = '<a class="btn btn-sm btn-outline-danger" href="' + response.userLogoutUrl + '">Logout</a>';
-
-      document.getElementById('taskTitle').innerText = response.task.title;
-      document.getElementById('taskDetails').innerHTML = response.task.details;
-      document.getElementById('taskLocation').innerHTML = response.task.address;
-      var deadline = new Date(response.task.deadline).toUTCString();
-      document.getElementById('taskDeadline').innerHTML = deadline;
-      document.getElementById('taskCreatedBy').innerHTML = response.task.creatorId;
-      document.getElementById('taskCompensation').innerHTML = response.task.compensation;
-      
       console.log(response.isCurrentUserAlreadyApplied);
       if(!response.isCreator && !response.task.assigned && !response.isCurrentUserAlreadyApplied)
         loadApplyButton(response.task.id);
@@ -24,13 +20,13 @@ function viewTaskDetails() {
         loadRateUserInputBox(response.task.id, response.task.assigneeId);
       loadAssigneeList(response.taskAssigneeList, response.task.id)
   })
-} 
+}
 
-function loadApplyButton(taskId){
+function applyForThisTask(taskId) {
   var taskApplyContainer = document.getElementById('task-apply');
   var applyButton = document.createElement('button');
   applyButton.className = "btn btn-success";
-  
+
   applyButton.innerHTML = "Apply for this task !";
   applyButton.onclick = function() {
     var ajaxPostRequest = new XMLHttpRequest();
@@ -82,7 +78,7 @@ function loadRateUserInputBox(taskId, assigneeId){
           .appendChild(rateForm);
 }
 
-/* 
+/*
  * Function to load task assignees list
  */
 function loadAssigneeList(taskAssigneeList, taskId) {
@@ -104,7 +100,7 @@ function loadAssigneeList(taskAssigneeList, taskId) {
     assignee.innerHTML = taskAssigneeList[i];
     assignee.onclick = function(){
       location.href = '/userProfile.html?userId=' + assign;
-    }    
+    }
     var assigneeContainer = document.createElement('li');
     assignee.style = 'margin-right:16px'
     assigneeContainer.append(assignee);
@@ -114,6 +110,9 @@ function loadAssigneeList(taskAssigneeList, taskId) {
   }
 }
 
-window.onload = () => {
-  viewTaskDetails();
-}
+
+$(document).ready(function() {
+  // viewTaskDetails();
+
+  formReadableDeadlineString();
+});
