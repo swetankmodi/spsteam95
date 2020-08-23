@@ -6,9 +6,11 @@
   <head>
     <meta charset="UTF-8">
     <title>Task | ${task.title}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/master.css">
     <link rel="stylesheet" href="/static/css/task-view.css">
+    <link rel="stylesheet" href="5-star-rating/star-rating.css">
   </head>
 
   <body>
@@ -41,8 +43,8 @@
     <p></p>
 
     <div class="container taskCard">
-      <%-- Task Title --%>
       <div class="container">
+        <%-- Task Title --%>
         <div class="row">
 
           <div class="col-lg-12">
@@ -102,26 +104,81 @@
           </div>
         </div>
 
-        <div class="assigneeInfo">
-          <c:if test="${task.isAssigned()} and ${task.isActive()}">
-            <%-- task rate if assignment is done --%>
-            <p>
-              <em>The task has been assigned to <a href="/userProfile.html?userId=${task.assigneeId}">${assignee.name}</a>. Rate Them.</em>
-            </p>
+        <div class="container assigneeInfo">
+
+          <c:if test="${task.isActive()}">
+
+            <%-- State: active, unassigned --%>
+            <c:if test="${!task.isAssigned()}">
+              <p class="assignmentMessage">
+
+                <c:if test="${isCreator}">
+                  <em>The task is open to applicants.</em>
+                </c:if>
+
+                <c:if test="${not isCreator}">
+                  <c:if test="${hasApplied}">
+                    <%-- User has applied already --%>
+                    <em>You have applied for this task.</em>
+                  </c:if>
+
+                  <c:if test="${not hasApplied}">
+                    <%-- Apply button, if not applied --%>
+                    <div class="flexCenterRow">
+                      <button class="btn btn-outline-success" id="applyButton"><a href="/task/apply?taskId=${task.id}">Apply</a></button>
+                    </div>
+                  </c:if>
+                </c:if>
+
+              </p>
+
+            </c:if>
+
+            <%-- State: active, assigned --%>
+            <c:if test="${task.isAssigned()}">
+              <p class="assignmentMessage">
+                <em>The task has been assigned to
+                  <strong><a href="/userProfile.html?userId=${task.assigneeId}">${assignee.name}</a></strong>.
+                </em>
+
+                <c:if test="${isCreator}">
+                  <p></p>
+                  <div class="">
+    								<span class="starRating">
+                      <label for="taskRating5">5</label>
+    									<input id="taskRating5" type="radio" name="taskRating" value="5" />
+    									<label for="taskRating4">4</label>
+                      <input id="taskRating4" type="radio" name="taskRating" value="4" />
+    									<label for="taskRating3">3</label>
+                      <input id="taskRating3" type="radio" name="taskRating" value="3" />
+    									<label for="taskRating2">2</label>
+                      <input id="taskRating2" type="radio" name="taskRating" value="2" />
+    									<label for="taskRating1">1</label>
+                      <input id="taskRating1" type="radio" name="taskRating" value="1" />
+    								</span>
+                  </div>
+                </c:if>
+              </p>
+            </c:if>
+
           </c:if>
 
-          <c:if test="${!task.isAssigned()} and ${task.isActive()}">
-            <%-- task rate if assignment is done --%>
-            <p>
-              <em>The task is open to applicants.</em>
-            </p>
-          </c:if>
+          <c:if test="${!task.isActive()}">
 
-          <c:if test="${!task.isAssigned()} and ${!task.isActive()}">
-            <%-- task rate if assignment is done --%>
-            <p>
-              <em>The task is now inactive.</em>
-            </p>
+            <%-- State: inactive, unassigned --%>
+            <c:if test="${!task.isAssigned()}">
+              <p>
+                <em>The task has been closed.</em>
+              </p>
+            </c:if>
+
+            <%-- State: inactive, assigned --%>
+            <c:if test="${task.isAssigned()}">
+              <p>
+                <%-- <em>The task was completed by to <a href="/userProfile.html?userId=${task.assigneeId}">${assignee.name}</a>.</em> --%>
+              </p>
+            </c:if>
+
           </c:if>
 
         </div>
@@ -140,7 +197,24 @@
                 <div class="card-body">
                   <div class="row">
                     <span class="col"><a href="/userProfile.html?userId=${applicant.id}">${applicant.name}</a></span>
-                    <span class="col">${applicant.rating}</span>
+                    <span class="score">
+                  		<div class="score-wrap">
+                        <span class="stars-active" style="width: ${(applicant.rating * 100) / 5}%">
+                  				<i class="fa fa-star" aria-hidden="true"></i>
+                  				<i class="fa fa-star" aria-hidden="true"></i>
+                  				<i class="fa fa-star" aria-hidden="true"></i>
+                  				<i class="fa fa-star" aria-hidden="true"></i>
+                  				<i class="fa fa-star" aria-hidden="true"></i>
+                  			</span>
+                  			<span class="stars-inactive">
+                  				<i class="fa fa-star-o" aria-hidden="true"></i>
+                  				<i class="fa fa-star-o" aria-hidden="true"></i>
+                  				<i class="fa fa-star-o" aria-hidden="true"></i>
+                  				<i class="fa fa-star-o" aria-hidden="true"></i>
+                  				<i class="fa fa-star-o" aria-hidden="true"></i>
+                  			</span>
+                  		</div>
+                  	</span>
                     <c:if test="${!task.isAssigned()}">
                       <button class="btn btn-sm btn-secondary" id="assignButton${applicant.id}"><a href="/task/assign?taskId=${task.id}&assigneeId=${applicant.id}">Assign</a></button>
                     </c:if>
@@ -151,30 +225,6 @@
             </c:forEach>
           </div>
 
-        </c:if>
-
-        <c:if test="${not isCreator}">
-          <%-- Content visible to non-creator users --%>
-
-          <c:if test="${(!task.isAssigned()) && (task.isActive())}">
-
-            <c:if test="${hasApplied}">
-              <%-- User has applied already --%>
-              <p>You are an applicant</p>
-            </c:if>
-
-            <c:if test="${not hasApplied}">
-              <%-- Apply button, if not applied --%>
-              <button class="btn btn-sm btn-success" id="applyButton"><a href="/task/apply?taskId=${task.id}">Apply</a></button>
-            </c:if>
-
-          </c:if>
-
-        </c:if>
-
-        <c:if test="${task.isAssigned() && task.isActive()}">
-          <%-- Task has been assigned to --%>
-          <p>Task has been assigned to ${assigneeId}</p>
         </c:if>
 
         <%-- Add one for post completion too --%>

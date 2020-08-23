@@ -87,12 +87,6 @@ public class TaskViewServlet extends HttpServlet {
         taskApplicantList.add(applicant);
       }
       request.setAttribute("taskApplicantList", taskApplicantList);
-
-      if (task.isAssigned()) {
-        // Get assignee details
-        User assignee = User.getUserFromId(task.getAssigneeId());
-        request.setAttribute("assignee", assignee);
-      }
     } else {
       // Logged in user is not the creator of the task
       request.setAttribute("isCreator", false);
@@ -119,6 +113,12 @@ public class TaskViewServlet extends HttpServlet {
         // The logged in user has applied for the task
         request.setAttribute("hasApplied", true);
       }
+    }
+
+    // Get assignee details if any
+    if (task.isAssigned()) {
+      User assignee = User.getUserFromId(task.getAssigneeId());
+      request.setAttribute("assignee", assignee);
     }
 
     request.setAttribute("task", task);
