@@ -57,7 +57,8 @@ public class TaskListServlet extends HttpServlet {
     // Add required sort
     String sortOptionString = getParameter(request, "sortOption", "Deadline");
     String sortDirectionString = getParameter(request, "sortDirection", "Descending");
-
+    System.out.print(sortOptionString + " " + sortDirectionString +" " + uriInfo);
+    //System.out.println(sortOptionString + " " + sortDirectionString);
     SortDirection sortDirection;
     if (sortDirectionString.equals("Ascending")) {
       sortDirection = SortDirection.ASCENDING;
@@ -92,8 +93,10 @@ public class TaskListServlet extends HttpServlet {
       User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
 
       Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());
-      query.setFilter(assigneeFilter);
+                                                 loggedInUser.getId());                               
+      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, true);
+      CompositeFilter activeAssigneeFilter = CompositeFilterOperator.and(activeFilter, assigneeFilter);
+      query.setFilter(activeAssigneeFilter);
     } else if (uriInfo.equals("/task/completed")) {
       // set filters for completed tasks
       User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
@@ -126,6 +129,7 @@ public class TaskListServlet extends HttpServlet {
     Gson gson = new Gson();
     json.addProperty("nextCursor", results.getCursor().toWebSafeString());
     json.add("tasks", gson.toJsonTree(tasks));
+    System.out.println(json);
     response.setContentType("application/json;");
     response.getWriter().println(json.toString());
   }
