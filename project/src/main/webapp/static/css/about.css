@@ -1,0 +1,110 @@
+/* Template Overrides */
+
+body {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/static/images/background/about.jpg") !important;  
+} 
+
+.container{
+    margin-top: 20px;
+}
+
+.jumbotron .text-center.fly-down {
+	position: fixed;
+	bottom: 0;
+	animation: 1s fly-down ease-in forwards;
+}
+.jumbotron .text-center > * {
+    align-content: center;
+	opacity: 0;
+}
+.jumbotron .text-center .greeting {
+	animation: fade-in 1s ease-in forwards;
+}
+.jumbotron .text-center .user-message {
+	max-width: 50%;
+	text-align: center;
+	animation: fade-in 1.5s linear forwards;
+	animation-delay: 1.5s;
+}
+.jumbotron .text-center .toggle {
+	animation: fade-in 1s linear forwards;
+	animation-delay: 5s;
+}
+.jumbotron .text-center .btn {
+	animation: fade-in 1s linear forwards;
+	animation-delay: 6s;
+}
+
+/* Animations */
+@keyframes fade-in {
+	100% { opacity: 1; }
+}
+@keyframes fly-down {
+	100% { bottom: -5000px; }
+}
+
+.founder{
+	align-items: center;
+	align-content: center;
+	display: flex;
+}
+
+.founder{
+	align-content: center;
+	align-self: center;
+	align-items: center;
+}
+
+.circle.small {
+	border: 4px solid #8d949b;
+	border-radius: 0%;
+	width: 150px;
+	height: 150px;
+	z-index: 86;
+	padding: 5px 5px 5px 5px;
+	margin: 3px 3px 3px 3px ;
+}
+
+.circle.filled {
+	background-color: #666666;
+}
+
+.circle h3 {
+    margin-top: 25px;
+    text-align: center;
+    font-family:  Arial, sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    color: #8d949b;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    display: block;
+}
+
+.circle h1 {
+    text-align: center;
+    font-family:  Times, serif;
+    font-weight: 600;
+    font-size: 25px;
+    color: #8d949b;
+    text-decoration: none;
+    display: block;
+    letter-spacing: -0.02em;
+    word-spacing: -0.02em;
+    line-height: 1;
+    margin-top: 32px;
+}
+
+.container .share-btn {
+	font-size: 2em;
+	padding: 10px;
+	color: #b0b0b0;
+  }
+  .container .share-btn:hover,
+  .container .share-btn:active {
+	text-shadow: 0 0 5px rgba(221, 232, 236, 0.45);
+	color: white;
+  }
+

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
     <link rel="stylesheet" href="/static/css/master.css" />
     <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/about.css">
   </head>
 
   <body>
@@ -47,6 +48,76 @@
       </div>
     </nav>
     <%-- Navbar ends --%>
+
+    <c:if test="${not isLoggedIn}">
+        <!-- About section starts -->
+    <div class="container" >
+      <div class="jumbotron text-center">
+        <p class="display-4 greeting">Hello There!</p>
+        <p class="lead user-message" style="align-self: center;">
+          Are you crumbled with lot of work? You no longer want to do but want it to get done.<br>
+          Or you have plenty of time and wanna fill your pockets with some extra money<br>
+          Welcome to Door2Door! <br>
+          Before we get started, we'd like to provide the best user experience possible!</p>
+        <button class="btn btn-dark mt-3" href="#timeline" >Let's get Started'</button>
+      </div>
+    </div>
+    <!-- About section ends -->
+
+    <!-- Timeline section starts -->
+    <div id="timeline" class="container">
+      <div class="jumbotron">
+        <!-- load timeline -->
+      </div>
+    </div>
+    <!-- Timeline section ends -->
+
+    <!-- Footer starts -->
+    <div class="container">
+      <div class="container">
+        <h1 style="color:antiquewhite;">Who we are?</h1>
+      </div>
+      <div class="row founder">
+        <div class="circle small">
+          <h1>Swetank<br>Modi</h1>
+          <h3>
+            <a href="#" class="share-btn icon-linkedin">in</a>
+            <a href="#" class="share-btn icon-google">g</a>
+          </h3>
+        </div>
+        <div class="circle small">
+          <h1>Aman<br>Singh</h1>
+          <h3>
+            <a href="#" class="share-btn icon-linkedin">in</a>
+            <a href="#" class="share-btn icon-google">g</a>
+          </h3>
+        </div>
+        <div class="circle small">
+          <h1>Arijit<br>Saha</h1>
+          <h3>
+            <a href="#" class="share-btn icon-linkedin">in</a>
+            <a href="#" class="share-btn icon-google">g</a>
+          </h3>
+        </div>
+        <div class="circle small">
+          <h1>Palak<br>Mittal</h1>
+          <h3>
+            <a href="#" class="share-btn icon-linkedin">in</a>
+            <a href="#" class="share-btn icon-google">g</a>
+          </h3>
+        </div>
+        <div class="circle small">
+          <h1>Tanmay<br>Bansal</h1>
+          <h3>
+            <a href="#" class="share-btn icon-linkedin">in</a>
+            <a href="#" class="share-btn icon-google">g</a>
+          </h3>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer ends -->
+    </c:if>
 
     <c:if test="${isLoggedIn}">
 
