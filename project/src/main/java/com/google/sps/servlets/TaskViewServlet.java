@@ -6,6 +6,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
@@ -87,16 +89,12 @@ public class TaskViewServlet extends HttpServlet {
     */
     Filter taskIdFilter =
         new FilterPredicate("taskId", Query.FilterOperator.EQUAL, task.getId());
-  
-    Query taskQuery = new Query("TaskApplicants").setFilter(taskIdFilter);
-    pq = datastore.prepare(taskQuery);
-    for(Entity applicantsEntity : pq.asIterable()){
-      Long id = Long.parseLong(applicantsEntity.getProperty("applicantId").toString());
-      if(id == userId){
-        isCurrentUserAlreadyApplied = true;
-        break;
-      }
-    }
+    Filter applicantFilter =
+        new FilterPredicate("applicantId", Query.FilterOperator.EQUAL, userId);
+    CompositeFilter taskApplicantFilter = CompositeFilterOperator.and(taskIdFilter, applicantFilter);
+    Query taskQuery = new Query("TaskApplicants").setFilter(taskApplicantFilter);
+    Entity applicantsEntity = datastore.prepare(taskQuery).asSingleEntity();
+    isCurrentUserAlreadyApplied = applicantsEntity != null;
 
     taskData.add("task", gson.toJsonTree(task));
     taskData.add("taskAssigneeList", gson.toJsonTree(taskAssigneeList));

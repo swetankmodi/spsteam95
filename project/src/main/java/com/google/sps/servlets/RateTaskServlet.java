@@ -3,9 +3,12 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -67,20 +70,15 @@ public class RateTaskServlet extends HttpServlet {
   private int getNumberOfTasksCompleted(long assigneeId){
     Query query = new Query("Task");
     Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL, assigneeId);
-    query.setFilter(assigneeFilter);
+    Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, false);
+    CompositeFilter assigneeActiveFilter = CompositeFilterOperator.and(assigneeFilter, activeFilter);
+    query.setFilter(assigneeActiveFilter);
 
     /*
     TODO : Add another attribute to User, that tracks the number of tasks compeleted 
             by that particular User
     */
-    int count = 0;
-    PreparedQuery pq = datastore.prepare(query);
-    for(Entity taskEntity : pq.asIterable()){
-      boolean active = Boolean.parseBoolean(taskEntity.getProperty("active").toString());
-      if(!active){
-        count++;
-      }
-    }
+    int count = datastore.prepare(query).countEntities(FetchOptions.Builder.withDefaults());
 
     System.out.println("Count " + count);
 
