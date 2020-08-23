@@ -58,7 +58,7 @@ public class ApplyTaskServlet extends HttpServlet {
 
     datastore.put(taskApplicantsEntity);
 
-    response.sendRedirect("/index.html");
+    response.sendRedirect("/task/view/" + taskId.toString());
   }
 
   private Long getParameter(HttpServletRequest request, String name, long defaultValue) {

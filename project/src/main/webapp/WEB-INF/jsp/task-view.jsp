@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/master.css">
     <link rel="stylesheet" href="/static/css/task-view.css">
-    <link rel="stylesheet" href="5-star-rating/star-rating.css">
+    <link rel="stylesheet" href="/static/css/5-star-rating/star-rating.css">
   </head>
 
   <body>
@@ -143,20 +143,31 @@
 
                 <c:if test="${isCreator}">
                   <p></p>
-                  <div class="">
-    								<span class="starRating">
-                      <label for="taskRating5">5</label>
-    									<input id="taskRating5" type="radio" name="taskRating" value="5" />
-    									<label for="taskRating4">4</label>
-                      <input id="taskRating4" type="radio" name="taskRating" value="4" />
-    									<label for="taskRating3">3</label>
-                      <input id="taskRating3" type="radio" name="taskRating" value="3" />
-    									<label for="taskRating2">2</label>
-                      <input id="taskRating2" type="radio" name="taskRating" value="2" />
-    									<label for="taskRating1">1</label>
-                      <input id="taskRating1" type="radio" name="taskRating" value="1" />
-    								</span>
-                  </div>
+                  <form class="" action="/task/rate" method="post">
+                    <input type="number" name="taskId" value="${task.id}" hidden>
+                    <input type="number" name="assigneeId" value="${assignee.id}" hidden>
+
+                    <div class="row task-rater">
+                      <div class="col-lg-2">
+                        <span class="starRating">
+                          <input id="taskRating5" type="radio" name="rating" value="5" />
+                          <label for="taskRating5">5</label>
+                          <input id="taskRating4" type="radio" name="rating" value="4" />
+                          <label for="taskRating4">4</label>
+                          <input id="taskRating3" type="radio" name="rating" value="3" />
+                          <label for="taskRating3">3</label>
+                          <input id="taskRating2" type="radio" name="rating" value="2" />
+                          <label for="taskRating2">2</label>
+                          <input id="taskRating1" type="radio" name="rating" value="1" />
+                          <label for="taskRating1">1</label>
+                        </span>
+                      </div>
+
+                      <div class="col-lg-2 task-rate-button">
+                        <input type="submit" class="btn btn-sm btn-outline-primary" value="Rate" />
+                      </div>
+                    </div>
+                  </form>
                 </c:if>
               </p>
             </c:if>
@@ -167,15 +178,15 @@
 
             <%-- State: inactive, unassigned --%>
             <c:if test="${!task.isAssigned()}">
-              <p>
+              <p class="assignmentMessage">
                 <em>The task has been closed.</em>
               </p>
             </c:if>
 
             <%-- State: inactive, assigned --%>
             <c:if test="${task.isAssigned()}">
-              <p>
-                <%-- <em>The task was completed by to <a href="/userProfile.html?userId=${task.assigneeId}">${assignee.name}</a>.</em> --%>
+              <p class="assignmentMessage">
+                <em>The task was completed by <a href="/userProfile.html?userId=${task.assigneeId}"><strong>${assignee.name}</strong></a> with a rating of <strong>${task.completionRating}</strong>.</em>
               </p>
             </c:if>
 
@@ -183,7 +194,7 @@
 
         </div>
 
-        <c:if test="${isCreator}">
+        <c:if test="${isCreator && task.isActive()}">
           <%-- Content visible only to the creator --%>
 
           <p class="col-lg-12 flexCenterRow applicantListHeader">Applicants</p>
@@ -227,8 +238,6 @@
 
         </c:if>
 
-        <%-- Add one for post completion too --%>
-
       </div>
     </div>
 
@@ -237,7 +246,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="/static/js/task-view-script.js" ></script>
-    <%-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --%>
   </body>
 
 </html>

@@ -212,7 +212,6 @@ public final class Task {
     this.completionRating = completionRating;
   }
 
-
   /** Activates the task. */
   public void activate() {
       this.active = true;

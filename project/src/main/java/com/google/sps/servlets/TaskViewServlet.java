@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.NumberFormatException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -68,6 +69,11 @@ public class TaskViewServlet extends HttpServlet {
       return;
     }
     Task task = Task.getTaskFromDatastoreEntity(taskEntity);
+
+    // If deadline has passed, deactivate task
+    if (new Date(task.getDeadlineAsLong()).before(new Date())) {
+      task.deactivate();
+    }
 
     if (task.getCreatorId() == loggedInUser.getId()) {
       // Logged in user is the creator of the task
