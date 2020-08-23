@@ -12,7 +12,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
 
-  <body>
+  <body style="background-image: url(/static/images/background/about.jpg) !important; background-size: cover;
+  background-repeat: no-repeat; ">
     <!-- Navbar Begins -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
       <a class="navbar-brand" href="/">Door2Door</a>
@@ -40,7 +41,7 @@
 
     <p></p>
     
-    <div class="container userCard">
+    <div class="jumbotron userCard">
       <div class="container">
         <div class="row">
 

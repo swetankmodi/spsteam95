@@ -1,8 +1,8 @@
 body {
-  background-image: url("/static/images/background/user-create-bg.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-}
+  background-image: url("/static/images/background/about.jpg") !important;  
+} 
 
 div.userCard {
   background-color: #472d309e;
