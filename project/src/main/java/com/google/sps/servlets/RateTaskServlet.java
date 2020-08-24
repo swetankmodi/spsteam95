@@ -37,7 +37,6 @@ public class RateTaskServlet extends HttpServlet {
       return;
 
     long assigneeId = getParameter(request, "assigneeId", -1);
-    System.out.println(taskId + " " + assigneeId);
     float completionRating = Float.parseFloat(request.getParameter("rating"));
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
@@ -80,7 +79,6 @@ public class RateTaskServlet extends HttpServlet {
     */
     int count = datastore.prepare(query).countEntities(FetchOptions.Builder.withDefaults());
 
-    System.out.println("Count " + count);
 
     return count;
   }
@@ -97,9 +95,6 @@ public class RateTaskServlet extends HttpServlet {
     float currRating = Float.parseFloat(userEntity.getProperty("rating").toString());
 
     float newRating = (currRating * count + completionRating) / (count + 1);
-    System.out.println("Count " + count);
-    System.out.println("Old Rating " + currRating);
-    System.out.println("New Rating " + newRating);
     userEntity.setProperty("rating", newRating);
     datastore.put(userEntity);
   }
