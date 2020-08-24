@@ -7,6 +7,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
@@ -55,7 +57,6 @@ public class TaskListServlet extends HttpServlet {
     // Add required sort
     String sortOptionString = getParameter(request, "sortOption", "Deadline");
     String sortDirectionString = getParameter(request, "sortDirection", "Descending");
-
     SortDirection sortDirection;
     if (sortDirectionString.equals("Ascending")) {
       sortDirection = SortDirection.ASCENDING;
@@ -90,8 +91,10 @@ public class TaskListServlet extends HttpServlet {
       User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
 
       Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());
-      query.setFilter(assigneeFilter);
+                                                 loggedInUser.getId());                               
+      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, true);
+      CompositeFilter activeAssigneeFilter = CompositeFilterOperator.and(activeFilter, assigneeFilter);
+      query.setFilter(activeAssigneeFilter);
     } else if (uriInfo.equals("/task/completed")) {
       // set filters for completed tasks
       User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
@@ -99,7 +102,9 @@ public class TaskListServlet extends HttpServlet {
       Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, false);
       Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
                                                  loggedInUser.getId());
-      query.setFilter(activeFilter).setFilter(assigneeFilter);
+      
+      CompositeFilter activeAssigneeFilter = CompositeFilterOperator.and(activeFilter, assigneeFilter);
+      query.setFilter(activeAssigneeFilter);
     }
 
     // Query the Datastore for the required tasks

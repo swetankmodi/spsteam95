@@ -31,7 +31,7 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="/userProfile.html?userId=${loggedInUser.id}">Profile</a>
+              <a class="nav-link" href="/userProfile.jsp?userId=${loggedInUser.id}">Profile</a>
             </li>
 
           </c:if>
