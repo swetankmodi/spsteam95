@@ -7,16 +7,12 @@ body {
 div.taskCard {
   background-color: #472d309e;
   padding: 20px 40px 8px 2px;
+  margin-bottom: 25px;
   border-radius: 5px;
 }
 
 .taskLabel {
   color: #A6A2A2;
-  font-size: 18px;
-}
-
-small.formPlaintext {
-  color: #EFE4D9;
   font-size: 18px;
 }
 
@@ -26,24 +22,70 @@ p.taskHeader {
   color: #C44536D9;
 }
 
-.taskValue{
+.taskValue {
   color: #C8C2AE;
+  font-size: 18px;
 }
 
-.taskValue:focus{
+.taskValue:focus {
   color: #E3D7FF;
 }
 
-.form-control{
-  background-color:#2B4141;
-  color: #C8C2AE;
+#taskDetails {
+  white-space: pre;
 }
 
-.form-control:focus{
-  background-color:#636B61;
-  color: #E3D7FF;
+div.applicantListDiv {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
 
-::placeholder {
-  color: rgba(185, 216, 194, 0.4) !important;
+div.applicantDiv {
+  margin: 7px auto 7px auto;
+  background-color: blanchedalmond;
+}
+
+.applicantListHeader {
+  font-weight: bold;
+  color: whitesmoke;
+  font-size: larger;
+}
+
+p.assignmentMessage {
+  color: burlywood;
+}
+
+/* 5 star rating */
+.score {
+  display: block;
+  font-size: 18px;
+  position: relative;
+  overflow: hidden;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.score-wrap {
+  display: inline-block;
+  position: relative;
+  height: 18px;
+}
+
+.score .stars-active {
+  color: orange;
+  position: relative;
+  z-index: 10;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.score .stars-inactive {
+  color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-text-stroke: initial;
+  overflow: hidden;
 }

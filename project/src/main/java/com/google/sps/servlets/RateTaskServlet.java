@@ -40,7 +40,7 @@ public class RateTaskServlet extends HttpServlet {
     if (!userService.isUserLoggedIn()) {
       return;
     }
-    
+
     Entity taskEntity;
     try{
       taskEntity = datastore.get(KeyFactory.createKey("Task", taskId));
@@ -49,11 +49,11 @@ public class RateTaskServlet extends HttpServlet {
       return;
     }
     setRatingForUser(getNumberOfTasksCompleted(assigneeId), assigneeId, completionRating);
-    
+
     taskEntity.setProperty("completionRating", completionRating);
     taskEntity.setProperty("active", false);
     datastore.put(taskEntity);
-    response.sendRedirect("/task-view.html?taskId=" + String.valueOf(taskId));
+    response.sendRedirect("/task/view/" + String.valueOf(taskId));
   }
 
   private long getParameter(HttpServletRequest request, String name, long defaultValue) {
@@ -70,7 +70,7 @@ public class RateTaskServlet extends HttpServlet {
     query.setFilter(assigneeFilter);
 
     /*
-    TODO : Add another attribute to User, that tracks the number of tasks compeleted 
+    TODO : Add another attribute to User, that tracks the number of tasks compeleted
             by that particular User
     */
     int count = 0;
