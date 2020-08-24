@@ -68,6 +68,10 @@
     <div id="timeline" class="container">
       <div class="jumbotron">
         <!-- load timeline -->
+        <h2>How to get your task done?</h2>
+        <img src="/static/images/add-task-timeline.png"><br><br>
+        <h3>Earn Money by Completing Tasks &#128525;</h3>
+        <img src="/static/images/apply-for-task.png">
       </div>
     </div>
     <!-- Timeline section ends -->
