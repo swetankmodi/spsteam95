@@ -12,7 +12,12 @@
     <link rel="stylesheet" href="/static/css/about.css">
   </head>
 
-  <body>
+  <c:if test="${isLoggedIn}">
+  <body class="logged-in-bg">
+  </c:if>
+  <c:if test="${!isLoggedIn}">
+  <body class="logged-out-bg">
+  </c:if>
 
     <%-- Navbar Begins --%>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -58,8 +63,7 @@
           Are you crumbled with lot of work? You no longer want to do but want it to get done.<br>
           Or you have plenty of time and wanna fill your pockets with some extra money<br>
           Welcome to Door2Door! <br>
-          Before we get started, we'd like to provide the best user experience possible!</p>
-        <button class="btn btn-dark mt-3" href="#timeline" >Let's get Started'</button>
+          Have a look at the steps to get the best user experience possible!</p>
       </div>
     </div>
     <!-- About section ends -->

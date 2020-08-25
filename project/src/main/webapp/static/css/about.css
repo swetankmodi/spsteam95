@@ -1,10 +1,10 @@
 /* Template Overrides */
 
-body {
+logged-out-bg {
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: url("/static/images/background/about.jpg") !important;  
-} 
+    background-image: url("/static/images/background/about.jpg");
+}
 
 .container{
     margin-top: 20px;
@@ -107,4 +107,3 @@ body {
 	text-shadow: 0 0 5px rgba(221, 232, 236, 0.45);
 	color: white;
   }
-
