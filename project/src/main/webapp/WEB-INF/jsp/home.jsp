@@ -133,7 +133,7 @@
       <div class="container">
         <div class="row sortFilterDiv">
           <div class="col-2">
-            <a href="/task/create" class="btn btn-sm btn-outline-success createButton">Create Task</a>
+            <a href="/task/create" class="btn btn-sm btn-success createButton">Create Task</a>
           </div>
 
           <div class="col-5">
