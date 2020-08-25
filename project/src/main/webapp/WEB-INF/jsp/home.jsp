@@ -55,76 +55,77 @@
     <%-- Navbar ends --%>
 
     <c:if test="${not isLoggedIn}">
-        <!-- About section starts -->
-    <div class="container" >
-      <div class="jumbotron text-center">
-        <p class="display-4 greeting">Hello There!</p>
-        <p class="lead user-message" style="align-self: center;">
-          Are you crumbled with lot of work? You no longer want to do but want it to get done.<br>
-          Or you have plenty of time and wanna fill your pockets with some extra money<br>
-          Welcome to Door2Door! <br>
-          Have a look at the steps to get the best user experience possible!</p>
+      <!-- About section starts -->
+      <div class="container" >
+        <div class="jumbotron text-center">
+          <h1 class="display-4 greeting">Welcome to Door2Door!</h1>
+          <p class="lead user-message" style="align-self: center;">
+            Are you crumbled with a lot of work? You no longer want to do it, but want to get it done. <br>
+            Or you have plenty of time and wanna fill your pockets with some extra money. <br>
+          </p>
+          <hr class="my-4" />
+          <p>Have a look at the steps to get the best user experience possible!</p>
+        </div>
       </div>
-    </div>
-    <!-- About section ends -->
+      <!-- About section ends -->
 
-    <!-- Timeline section starts -->
-    <div id="timeline" class="container">
-      <div class="jumbotron">
-        <!-- load timeline -->
-        <h2>How to get your task done?</h2>
-        <img src="/static/images/add-task-timeline.png"><br><br>
-        <h3>Earn Money by Completing Tasks &#128525;</h3>
-        <img src="/static/images/apply-for-task.png">
+      <!-- Timeline section starts -->
+      <div id="timeline" class="container">
+        <div class="jumbotron">
+          <!-- load timeline -->
+          <h2>How to get your task done?</h2>
+          <img src="/static/images/add-task-timeline.png"><br><br>
+          <h3>Earn Money by Completing Tasks &#128525;</h3>
+          <img src="/static/images/apply-for-task.png">
+        </div>
       </div>
-    </div>
-    <!-- Timeline section ends -->
+      <!-- Timeline section ends -->
 
-    <!-- Footer starts -->
-    <div class="container">
+      <!-- Footer starts -->
       <div class="container">
-        <h1 style="color:antiquewhite;">Who we are?</h1>
+        <div class="container">
+          <h1 style="color:antiquewhite;">Who we are?</h1>
+        </div>
+        <div class="row founder">
+          <div class="circle small">
+            <h1>Swetank<br>Modi</h1>
+            <h3>
+              <a href="#" class="share-btn icon-linkedin">in</a>
+              <a href="#" class="share-btn icon-google">g</a>
+            </h3>
+          </div>
+          <div class="circle small">
+            <h1>Aman<br>Singh</h1>
+            <h3>
+              <a href="#" class="share-btn icon-linkedin">in</a>
+              <a href="#" class="share-btn icon-google">g</a>
+            </h3>
+          </div>
+          <div class="circle small">
+            <h1>Arijit<br>Saha</h1>
+            <h3>
+              <a href="#" class="share-btn icon-linkedin">in</a>
+              <a href="#" class="share-btn icon-google">g</a>
+            </h3>
+          </div>
+          <div class="circle small">
+            <h1>Palak<br>Mittal</h1>
+            <h3>
+              <a href="#" class="share-btn icon-linkedin">in</a>
+              <a href="#" class="share-btn icon-google">g</a>
+            </h3>
+          </div>
+          <div class="circle small">
+            <h1>Tanmay<br>Bansal</h1>
+            <h3>
+              <a href="#" class="share-btn icon-linkedin">in</a>
+              <a href="#" class="share-btn icon-google">g</a>
+            </h3>
+          </div>
+        </div>
       </div>
-      <div class="row founder">
-        <div class="circle small">
-          <h1>Swetank<br>Modi</h1>
-          <h3>
-            <a href="#" class="share-btn icon-linkedin">in</a>
-            <a href="#" class="share-btn icon-google">g</a>
-          </h3>
-        </div>
-        <div class="circle small">
-          <h1>Aman<br>Singh</h1>
-          <h3>
-            <a href="#" class="share-btn icon-linkedin">in</a>
-            <a href="#" class="share-btn icon-google">g</a>
-          </h3>
-        </div>
-        <div class="circle small">
-          <h1>Arijit<br>Saha</h1>
-          <h3>
-            <a href="#" class="share-btn icon-linkedin">in</a>
-            <a href="#" class="share-btn icon-google">g</a>
-          </h3>
-        </div>
-        <div class="circle small">
-          <h1>Palak<br>Mittal</h1>
-          <h3>
-            <a href="#" class="share-btn icon-linkedin">in</a>
-            <a href="#" class="share-btn icon-google">g</a>
-          </h3>
-        </div>
-        <div class="circle small">
-          <h1>Tanmay<br>Bansal</h1>
-          <h3>
-            <a href="#" class="share-btn icon-linkedin">in</a>
-            <a href="#" class="share-btn icon-google">g</a>
-          </h3>
-        </div>
-      </div>
-    </div>
+      <!-- Footer ends -->
 
-    <!-- Footer ends -->
     </c:if>
 
     <c:if test="${isLoggedIn}">

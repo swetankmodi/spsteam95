@@ -1,6 +1,6 @@
 /* Template Overrides */
 
-logged-out-bg {
+.logged-out-bg {
     background-size: cover;
     background-repeat: no-repeat;
     background-image: url("/static/images/background/about.jpg");
