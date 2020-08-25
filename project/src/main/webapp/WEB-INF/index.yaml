@@ -1,10 +1,76 @@
 indexes:
 
+# Group
+
+- kind: Task
+  properties:
+  - name: active
+  - name: deadline
+
+- kind: Task
+  properties:
+  - name: active
+  - name: deadline
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: active
+  - name: compensation
+
+- kind: Task
+  properties:
+  - name: active
+  - name: compensation
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creationTime
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creationTime
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: creatorId
+  - name: compensation
+
+- kind: Task
+  properties:
+  - name: creatorId
+  - name: compensation
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: creatorId
+  - name: creationTime
+
 - kind: Task
   properties:
   - name: creatorId
   - name: creationTime
     direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: assigneeId
+  - name: creationTime
 
 - kind: Task
   properties:
@@ -12,8 +78,88 @@ indexes:
   - name: creationTime
     direction: desc
 
+# Group
+
 - kind: TaskApplicants
   properties:
   - name: taskId
   - name: creationTime
+
+- kind: TaskApplicants
+  properties:
+  - name: taskId
+  - name: creationTime
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: creatorId
+  - name: deadline
+
+- kind: Task
+  properties:
+  - name: creatorId
+  - name: deadline
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: active
+  - name: assigneeId
+  - name: deadline
+
+- kind: Task
+  properties:
+  - name: active
+  - name: assigneeId
+  - name: deadline
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creatorId
+  - name: creationTime
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creatorId
+  - name: creationTime
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creatorId
+  - name: deadline
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creatorId
+  - name: deadline
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creatorId
+  - name: compensation
+
+- kind: Task
+  properties:
+  - name: active
+  - name: creatorId
+  - name: compensation
     direction: desc

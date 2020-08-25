@@ -81,8 +81,8 @@ public class TaskListServlet extends HttpServlet {
     }
 
     // Add active filters
-    boolean filterActive = getParameter(request, "filterActive", true);
-    Filter activeFilter;
+    boolean filterActive = getParameter(request, "filterActive", false);
+    Filter activeFilter = null;
     if (uriInfo.equals("/task/assigned")) {
       // active = true for assigned tasks
       activeFilter = new FilterPredicate("active",
@@ -90,12 +90,11 @@ public class TaskListServlet extends HttpServlet {
     } else if (uriInfo.equals("/task/completed")) {
       // active = false for completed tasks
       activeFilter = new FilterPredicate("active",
-          Query.FilterOperator.EQUAL, true);
-    } else {
+          Query.FilterOperator.EQUAL, false);
+    } else if (filterActive) {
       activeFilter = new FilterPredicate("active",
-          Query.FilterOperator.EQUAL, filterActive);
+          Query.FilterOperator.EQUAL, true);
     }
-
 
     // Add filters based on URI (created, assigned, completed)
     Filter uriFilter = null;
@@ -120,12 +119,14 @@ public class TaskListServlet extends HttpServlet {
     }
 
     // Set filter for query
-    if (uriFilter == null) {
-      query.setFilter(activeFilter);
-    } else {
+    if ((activeFilter != null) && (uriFilter != null)) {
       Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
           Arrays.<Filter>asList(uriFilter, activeFilter));
       query.setFilter(compositeFilter);
+    } else if (activeFilter == null) {
+      query.setFilter(uriFilter);
+    } else if (uriFilter == null) {
+      query.setFilter(activeFilter);
     }
 
     // Query the Datastore for the required tasks
