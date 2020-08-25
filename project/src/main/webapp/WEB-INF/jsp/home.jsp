@@ -119,7 +119,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Footer ends -->
     </c:if>
 
@@ -131,7 +131,7 @@
             <a href="/task/create" class="btn btn-sm btn-outline-success createButton">Create Task</a>
           </div>
 
-          <div class="col-6">
+          <div class="col-5">
           </div>
 
           <div class="col form-inline">
@@ -147,6 +147,12 @@
               <option>Ascending</option>
               <option>Descending</option>
             </select>
+
+            <div class="form-control-sm form-check form-check-inline" style="padding-top: 6px;">
+              <input class="form-check-input sort-filter-options" type="checkbox" id="taskFilterActive" value="active" checked>
+              <label class="form-check-label sort-filter-options" for="taskFilterActive">Active</label>
+            </div>
+
           </div>
 
         </div>

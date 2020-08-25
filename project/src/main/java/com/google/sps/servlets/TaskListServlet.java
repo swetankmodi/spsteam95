@@ -23,6 +23,7 @@ import com.google.sps.data.User;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -57,6 +58,7 @@ public class TaskListServlet extends HttpServlet {
     // Add required sort
     String sortOptionString = getParameter(request, "sortOption", "Deadline");
     String sortDirectionString = getParameter(request, "sortDirection", "Descending");
+
     SortDirection sortDirection;
     if (sortDirectionString.equals("Ascending")) {
       sortDirection = SortDirection.ASCENDING;
@@ -78,33 +80,52 @@ public class TaskListServlet extends HttpServlet {
       fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
     }
 
+    // Add active filters
+    boolean filterActive = getParameter(request, "filterActive", true);
+    Filter activeFilter;
+    if (uriInfo.equals("/task/assigned")) {
+      // active = true for assigned tasks
+      activeFilter = new FilterPredicate("active",
+          Query.FilterOperator.EQUAL, true);
+    } else if (uriInfo.equals("/task/completed")) {
+      // active = false for completed tasks
+      activeFilter = new FilterPredicate("active",
+          Query.FilterOperator.EQUAL, true);
+    } else {
+      activeFilter = new FilterPredicate("active",
+          Query.FilterOperator.EQUAL, filterActive);
+    }
+
+
     // Add filters based on URI (created, assigned, completed)
+    Filter uriFilter = null;
     if (uriInfo.equals("/task/created")) {
       // set filters for created tasks
       User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
 
-      Filter creatorFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL,
+      uriFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL,
                                                  loggedInUser.getId());
-      query.setFilter(creatorFilter);
     } else if (uriInfo.equals("/task/assigned")) {
       // set filters for assigned tasks
       User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
 
-      Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());                               
-      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, true);
-      CompositeFilter activeAssigneeFilter = CompositeFilterOperator.and(activeFilter, assigneeFilter);
-      query.setFilter(activeAssigneeFilter);
+      uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
+                                                 loggedInUser.getId());
     } else if (uriInfo.equals("/task/completed")) {
       // set filters for completed tasks
       User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
 
-      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, false);
-      Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
+      uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
                                                  loggedInUser.getId());
-      
-      CompositeFilter activeAssigneeFilter = CompositeFilterOperator.and(activeFilter, assigneeFilter);
-      query.setFilter(activeAssigneeFilter);
+    }
+
+    // Set filter for query
+    if (uriFilter == null) {
+      query.setFilter(activeFilter);
+    } else {
+      Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
+          Arrays.<Filter>asList(uriFilter, activeFilter));
+      query.setFilter(compositeFilter);
     }
 
     // Query the Datastore for the required tasks
@@ -151,6 +172,14 @@ public class TaskListServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
+  }
+
+  private boolean getParameter(HttpServletRequest request, String name, boolean defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return Boolean.parseBoolean(value);
   }
 
 }
