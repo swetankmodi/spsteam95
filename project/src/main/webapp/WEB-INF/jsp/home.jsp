@@ -83,43 +83,43 @@
 
       <!-- Footer starts -->
       <div class="container">
-        <div class="container">
+        <div class="container flexCenterRow">
           <h1 style="color:antiquewhite;">Who we are?</h1>
         </div>
-        <div class="row founder">
+        <div class="row founder flexCenterRow">
           <div class="circle small">
             <h1>Swetank<br>Modi</h1>
             <h3>
-              <a href="#" class="share-btn icon-linkedin">in</a>
-              <a href="#" class="share-btn icon-google">g</a>
+              <%-- <a href="#" class="share-btn icon-linkedin">in</a> --%>
+              <%-- <a href="#" class="share-btn icon-google">g</a> --%>
             </h3>
           </div>
           <div class="circle small">
             <h1>Aman<br>Singh</h1>
             <h3>
-              <a href="#" class="share-btn icon-linkedin">in</a>
-              <a href="#" class="share-btn icon-google">g</a>
+              <%-- <a href="#" class="share-btn icon-linkedin">in</a> --%>
+              <%-- <a href="#" class="share-btn icon-google">g</a> --%>
             </h3>
           </div>
           <div class="circle small">
             <h1>Arijit<br>Saha</h1>
             <h3>
-              <a href="#" class="share-btn icon-linkedin">in</a>
-              <a href="#" class="share-btn icon-google">g</a>
+              <%-- <a href="#" class="share-btn icon-linkedin">in</a> --%>
+              <%-- <a href="#" class="share-btn icon-google">g</a> --%>
             </h3>
           </div>
           <div class="circle small">
             <h1>Palak<br>Mittal</h1>
             <h3>
-              <a href="#" class="share-btn icon-linkedin">in</a>
-              <a href="#" class="share-btn icon-google">g</a>
+              <%-- <a href="#" class="share-btn icon-linkedin">in</a> --%>
+              <%-- <a href="#" class="share-btn icon-google">g</a> --%>
             </h3>
           </div>
           <div class="circle small">
             <h1>Tanmay<br>Bansal</h1>
             <h3>
-              <a href="#" class="share-btn icon-linkedin">in</a>
-              <a href="#" class="share-btn icon-google">g</a>
+              <%-- <a href="#" class="share-btn icon-linkedin">in</a> --%>
+              <%-- <a href="#" class="share-btn icon-google">g</a> --%>
             </h3>
           </div>
         </div>
@@ -172,7 +172,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="/static/js/home-script.js"></script>
+    <c:if test="${isLoggedIn}">
+      <script src="/static/js/home-script.js"></script>
+    </c:if>
   </body>
 
 </html>
