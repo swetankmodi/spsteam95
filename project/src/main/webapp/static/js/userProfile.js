@@ -62,7 +62,7 @@ function constructTaskNode(task) {
 
   let f = '<div class="task-node">' +
         '<div class="task-first-line">' +
-          '<a href="/task-view.html?taskId=' + task.id + '"><span class="task-title">' + task.title + '</span></a>' +
+          '<a href="/task-view.jsp?taskId=' + task.id + '"><span class="task-title">' + task.title + '</span></a>' +
           '<span class="task-compensation">&#x20B9; ' + task.compensation + '</span>' +
         '</div>' +
 

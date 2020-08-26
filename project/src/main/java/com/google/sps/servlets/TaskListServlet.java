@@ -36,9 +36,6 @@ import javax.servlet.ServletException;
 public class TaskListServlet extends HttpServlet {
   static final int PAGE_SIZE = 25;
 
-  /*denotes the approx time in milliseconds which takes the datastore fetch 
-        results after applying the filter and returning response to the client*/
-  static final int OFF_SET = 100; 
   private final DatastoreService datastore;
 
   public TaskListServlet() {
@@ -137,6 +134,8 @@ public class TaskListServlet extends HttpServlet {
     List<Task> tasks = new ArrayList<>();
     for (Entity entity : results) {
       Task task = Task.getTaskFromDatastoreEntity(entity);
+
+      // If deadline has passed and the active filter is not applied on the home page
       if(task.getDeadlineAsLong() < System.currentTimeMillis() + OFF_SET && 
         filterActive)
         continue;
