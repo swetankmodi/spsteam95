@@ -1,4 +1,5 @@
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 
@@ -7,9 +8,8 @@
     <title> User | Details</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/master.css">
-    <link rel="stylesheet" href="/static/css/user-profile.css">
-    <link rel="stylesheet" href="/static/css/home.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <%-- <link rel="stylesheet" href="/static/css/user-profile.css"> --%>
+    <%-- <link rel="stylesheet" href="/static/css/home.css"> --%>
   </head>
 
   <body style="background-image: url(/static/images/background/about.jpg) !important; background-size: cover;
@@ -40,7 +40,7 @@
     <!-- Navbar ends -->
 
     <p></p>
-    
+
     <div class="jumbotron userCard">
       <div class="container">
         <div class="row">
@@ -92,20 +92,20 @@
         </div>
 
         <p></p>
-        
+
         <div class="row">
           <div class="col-lg-12" id="edit-profile"></div>
         </div>
 
-        
-      
+
+
       </div>
     </div>
     <div class="container">
       <div class="row sortFilterDiv">
-       
+
         <h1 style="color: white">Tasks</h1>
-      
+
 
         <div class="col-6">
         </div>
@@ -118,7 +118,7 @@
             <option>Tasks Created</option>
             <option>Tasks Assigned</option>
           </select>
-          
+
           <select id="taskSortOption" class="form-control-sm sort-filter-options">
             <option>Deadline</option>
             <option>Creation</option>
@@ -130,7 +130,7 @@
             <option>Descending</option>
           </select>
 
-          
+
 
         </div>
 
@@ -146,6 +146,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="/static/js/userProfile.js"></script>
   </body>
-  
-  
+
+
 </html>
