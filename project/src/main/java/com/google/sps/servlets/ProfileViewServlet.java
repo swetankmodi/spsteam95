@@ -22,7 +22,7 @@ import javax.servlet.ServletException;
 import com.google.gson.Gson;
 
 @WebServlet(urlPatterns = {"/profile/*"})
-public class ProfileServlet extends HttpServlet {
+public class ProfileViewServlet extends HttpServlet {
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private UserService userService = UserServiceFactory.getUserService();
 

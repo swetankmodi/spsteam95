@@ -20,7 +20,7 @@ import javax.servlet.ServletException;
 import com.google.gson.Gson;
 
 @WebServlet("/profile/edit")
-public class EditUserDetailsServlet extends HttpServlet {
+public class ProfileEditServlet extends HttpServlet {
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 
