@@ -35,6 +35,10 @@ import javax.servlet.ServletException;
 @WebServlet(urlPatterns = {"/task/all", "/task/created", "/task/assigned", "/task/completed"})
 public class TaskListServlet extends HttpServlet {
   static final int PAGE_SIZE = 25;
+
+  /*denotes the approx time in milliseconds which takes the datastore fetch 
+        results after applying the filter and returning response to the client*/
+  static final int OFF_SET = 100; 
   private final DatastoreService datastore;
 
   public TaskListServlet() {
@@ -58,12 +62,22 @@ public class TaskListServlet extends HttpServlet {
     // Add required sort
     String sortOptionString = getParameter(request, "sortOption", "Deadline");
     String sortDirectionString = getParameter(request, "sortDirection", "Descending");
-
+    Long userId = -1L;
+    if(!uriInfo.equals("/task/all"))
+      userId = getParameter(request, "userId", -1L);
+    
     SortDirection sortDirection;
     if (sortDirectionString.equals("Ascending")) {
       sortDirection = SortDirection.ASCENDING;
     } else {
       sortDirection = SortDirection.DESCENDING;
+    }
+
+
+    // If this servlet is passed a cursor parameter, use it.
+    String startCursor = request.getParameter("cursor");
+    if (startCursor != null) {
+      fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
     }
 
     if (sortOptionString.equals("Creation")) {
@@ -74,60 +88,42 @@ public class TaskListServlet extends HttpServlet {
       query.addSort("deadline", sortDirection);
     }
 
-    // If this servlet is passed a cursor parameter, use it.
-    String startCursor = request.getParameter("cursor");
-    if (startCursor != null) {
-      fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
-    }
 
     // Add active filters
     boolean filterActive = getParameter(request, "filterActive", false);
-    Filter activeFilter = null;
-    if (uriInfo.equals("/task/assigned")) {
-      // active = true for assigned tasks
-      activeFilter = new FilterPredicate("active",
-          Query.FilterOperator.EQUAL, true);
-    } else if (uriInfo.equals("/task/completed")) {
-      // active = false for completed tasks
-      activeFilter = new FilterPredicate("active",
-          Query.FilterOperator.EQUAL, false);
-    } else if (filterActive) {
-      activeFilter = new FilterPredicate("active",
-          Query.FilterOperator.EQUAL, true);
-    }
-
-    // Add filters based on URI (created, assigned, completed)
-    Filter uriFilter = null;
-    if (uriInfo.equals("/task/created")) {
+    if (uriInfo.equals("/task/all")) {
+      // assigned = false and deadline has not passed
+      if(filterActive){
+        Filter isAssignedFilter = new FilterPredicate("assigned",
+            Query.FilterOperator.EQUAL, false);
+        query.setFilter(isAssignedFilter);
+      }
+    } else if (uriInfo.equals("/task/created")) {
       // set filters for created tasks
-      User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
-
-      uriFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());
+      Filter uriFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL,
+                                                 userId);
+      query.setFilter(uriFilter);
     } else if (uriInfo.equals("/task/assigned")) {
       // set filters for assigned tasks
-      User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
-
-      uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());
-    } else if (uriInfo.equals("/task/completed")) {
-      // set filters for completed tasks
-      User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
-
-      uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());
-    }
-
-    // Set filter for query
-    if ((activeFilter != null) && (uriFilter != null)) {
+      Filter uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
+                                                 userId);
+      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL,
+                                                  true);
       Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
           Arrays.<Filter>asList(uriFilter, activeFilter));
       query.setFilter(compositeFilter);
-    } else if (activeFilter == null) {
-      query.setFilter(uriFilter);
-    } else if (uriFilter == null) {
-      query.setFilter(activeFilter);
+    } else {
+      // set filters for completed tasks
+      Filter uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
+                                                 userId);
+      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL,
+                                                  false);
+      Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
+          Arrays.<Filter>asList(uriFilter, activeFilter));
+      query.setFilter(compositeFilter);
     }
+
+    
 
     // Query the Datastore for the required tasks
     QueryResultList<Entity> results;
@@ -141,6 +137,9 @@ public class TaskListServlet extends HttpServlet {
     List<Task> tasks = new ArrayList<>();
     for (Entity entity : results) {
       Task task = Task.getTaskFromDatastoreEntity(entity);
+      if(task.getDeadlineAsLong() < System.currentTimeMillis() + OFF_SET && 
+        filterActive)
+        continue;
       tasks.add(task);
     }
 
@@ -181,6 +180,14 @@ public class TaskListServlet extends HttpServlet {
       return defaultValue;
     }
     return Boolean.parseBoolean(value);
+  }
+
+  private Long getParameter(HttpServletRequest request, String name, Long defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return Long.parseLong(value);
   }
 
 }

@@ -3,6 +3,15 @@ const taskListDivClassName = "taskListDiv";
 
 var taskListCursor = null;
 var working = false;
+var userId = null;
+
+function setUserIdFromQueryParams(queryParams){
+  var len = queryParams.length;
+  if(queryParams.charAt(len - 1) == '/')
+    userId = queryParams.substring(7, len - 1);
+  else
+    userId = queryParams.substring(7, len);
+}
 
 function addProfileDetailsToDOM() {
   var queryParams = new URLSearchParams(window.location.search);
@@ -10,6 +19,7 @@ function addProfileDetailsToDOM() {
   fetch('/profile?' + queryParams).then((response) => {
       return response.json();
   }).then((response) => {
+
     var name = response.user.name;
     var email = response.user.email;
     var phone = response.user.phone;
@@ -68,6 +78,12 @@ function constructTaskNode(task) {
  * Function to load tasks.
  */
 function loadTasks(refreshList = false) {
+  var queryParams = new URLSearchParams(window.location.search);
+  queryParams = queryParams.toString();
+  //set userId from queryParams
+  if(userId == null)
+    setUserIdFromQueryParams(queryParams);
+
   if(working)
     return;
   working = true;
@@ -80,6 +96,7 @@ function loadTasks(refreshList = false) {
     taskList.empty();
   }
 
+
   let sortOption = $('#taskSortOption').val();
   let sortDirection = $('#taskSortDirection').val();
   let taskType = $('#taskType').val();
@@ -91,7 +108,8 @@ function loadTasks(refreshList = false) {
   else
     fetchURL ='/task/assigned';
   
-  $.get(fetchURL, { cursor: taskListCursor,
+  $.get(fetchURL, { userId : userId,
+                    cursor: taskListCursor,
                     sortOption: sortOption,
                     sortDirection: sortDirection
       }).done(function(response) {
@@ -99,7 +117,6 @@ function loadTasks(refreshList = false) {
     // Append Tasks to list
     for (task of response.tasks) {
       taskNode = $(constructTaskNode(task));
-      console.log(task);
       taskList.append(taskNode);
     }
 
@@ -115,7 +132,6 @@ window.addEventListener('scroll', function() {
   if (document.documentElement.scrollTop + document.documentElement.clientHeight
       >= document.documentElement.scrollHeight) {
     if (working === false) {
-      //working = true;
       loadTasks();
     }
   }
@@ -135,6 +151,7 @@ $(document).ready(function(){
     loadTasks(true);
   });
 
+  // For Switching Tasks Type
   $('#taskType').on('change',function(){
     loadTasks(true);
   });
