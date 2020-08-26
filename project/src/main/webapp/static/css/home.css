@@ -1,4 +1,3 @@
-/* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap');
 
 body {
@@ -8,7 +7,8 @@ body {
 .logged-in-bg {
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("/static/images/background/home-logged-in-bg.jpg")
+  background-image: url("/static/images/background/home-logged-in-bg.jpg");
+  background-attachment: fixed;
 }
 
 .sortFilterDiv {

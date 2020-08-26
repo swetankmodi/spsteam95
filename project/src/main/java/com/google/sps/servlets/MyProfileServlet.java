@@ -30,7 +30,7 @@ public class MyProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
-    
+
     User user = User.getUserFromEmail(userService.getCurrentUser().getEmail());
     if (user == null) {
       // Logged in user is not registered in Datastore
@@ -50,4 +50,3 @@ public class MyProfileServlet extends HttpServlet {
     response.getWriter().println(userData);
   }
 }
-

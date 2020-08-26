@@ -136,7 +136,7 @@
 
         <div class="row">
 
-          <div class="col-7">
+          <div class="col-8">
             <select id="taskType" class="form-control-sm sort-filter-options">
               <option>Tasks Created</option>
               <option>Tasks Completed</option>
