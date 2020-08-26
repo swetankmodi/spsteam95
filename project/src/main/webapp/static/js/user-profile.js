@@ -4,23 +4,6 @@ const taskListDivClassName = "taskListDiv";
 var taskListCursor = null;
 var working = false;
 
-function addProfileDetailsToDOM() {
-  var queryParams = new URLSearchParams(window.location.search);
-  queryParams = queryParams.toString();
-  fetch('/profile?' + queryParams).then((response) => {
-      return response.json();
-  }).then((response) => {
-    var name = response.user.name;
-    var email = response.user.email;
-    var phone = response.user.phone;
-    var rating = response.user.rating;
-
-    if(response.canEditProfile){
-      addEditProfileButtonToDom();
-    }
-  })
-}
-
 function constructTaskNode(task) {
   let deadline = new Date(task.deadline);
   let deadlineString = deadline.toLocaleString('en-US',
@@ -45,8 +28,7 @@ function constructTaskNode(task) {
  * Function to load tasks.
  */
 function loadTasks(refreshList = false) {
-  if(working)
-    return;
+  if (working) return;
   working = true;
   let fetchURL = '/task/completed';
   let taskList = $('div.' + taskListDivClassName);
@@ -61,9 +43,9 @@ function loadTasks(refreshList = false) {
   let sortDirection = $('#taskSortDirection').val();
   let taskType = $('#taskType').val();
 
-  if(taskType == 'Tasks Completed')
+  if(taskType == 'Completed Tasks')
     fetchURL = '/task/completed';
-  else if(taskType == 'Tasks Created')
+  else if(taskType == 'Created Tasks')
     fetchURL = '/task/created';
   else
     fetchURL ='/task/assigned';
@@ -76,11 +58,9 @@ function loadTasks(refreshList = false) {
     // Append Tasks to list
     for (task of response.tasks) {
       taskNode = $(constructTaskNode(task));
-      console.log(task);
       taskList.append(taskNode);
     }
 
-    /*Todo : Infinite Scrolling, was having some errors with cursor*/
     // Update cursor
     taskListCursor = response.nextCursor;
     working = false;
@@ -91,15 +71,11 @@ function loadTasks(refreshList = false) {
 window.addEventListener('scroll', function() {
   if (document.documentElement.scrollTop + document.documentElement.clientHeight
       >= document.documentElement.scrollHeight) {
-    if (working === false) {
-      //working = true;
-      loadTasks();
-    }
+    loadTasks();
   }
 });
 
 $(document).ready(function(){
-  addProfileDetailsToDOM();
   loadTasks();
 
   // For Switching Sort Options
@@ -112,6 +88,7 @@ $(document).ready(function(){
     loadTasks(true);
   });
 
+  // For Switching Task Types
   $('#taskType').on('change',function(){
     loadTasks(true);
   });

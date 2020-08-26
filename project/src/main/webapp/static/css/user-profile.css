@@ -5,7 +5,7 @@
 }
 
 div.userCard {
-  background-color: #472d309e;
+  background-color: #3B3D40BF;
   padding: 20px 40px 8px 2px;
   border-radius: 5px;
 }
@@ -18,7 +18,7 @@ div.userCard {
 p.userHeader {
   padding-left: 40px;
   font-size: 32px;
-  color: #C44536D9;
+  color: #A4AFBDD9;
 }
 
 .userValue{
@@ -37,4 +37,48 @@ p.userHeader {
 .form-control:focus{
   background-color:#636B61;
   color: #E3D7FF;
+}
+
+.sort-filter-options {
+  color: #D8DBE2;
+  outline: none;
+  border: none;
+  background-color: inherit;
+  width: auto;
+}
+
+.sort-filter-options option {
+  background-color: #1A1A1E;
+}
+
+/* 5 star rating */
+.score {
+  display: block;
+  font-size: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.score-wrap {
+  display: inline-block;
+  position: relative;
+  height: 18px;
+}
+
+.score .stars-active {
+  color: orange;
+  position: relative;
+  z-index: 10;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.score .stars-inactive {
+  color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-text-stroke: initial;
+  overflow: hidden;
 }

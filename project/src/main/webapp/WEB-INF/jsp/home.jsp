@@ -149,8 +149,8 @@
             </select>
 
             <select id="taskSortDirection" class="form-control-sm sort-filter-options">
-              <option>Ascending</option>
               <option>Descending</option>
+              <option>Ascending</option>
             </select>
 
             <div class="form-control-sm form-check form-check-inline" style="padding-top: 6px;">

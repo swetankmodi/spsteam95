@@ -93,6 +93,14 @@ public final class User {
     return this.rating;
   }
 
+  public String getEmail() {
+    return this.email;
+  }
+
+  public String getPhone() {
+    return this.phone;
+  }
+
   public boolean isProfileComplete() {
     return (this.name.length() > 0);
   }

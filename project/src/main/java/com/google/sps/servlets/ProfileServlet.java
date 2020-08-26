@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 import com.google.gson.Gson;
 
 @WebServlet(urlPatterns = {"/profile/*"})
@@ -27,7 +28,7 @@ public class ProfileServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+      throws IOException, ServletException {
     // If not logged in, redirect to landing page
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/");
@@ -59,6 +60,10 @@ public class ProfileServlet extends HttpServlet {
     request.setAttribute("profileUser", profileUser);
     request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
     request.setAttribute("isMyProfile", (profileUser.getId() == loggedInUser.getId()));
+
+    // Dispatch request to User Profile View
+    request.getRequestDispatcher("/WEB-INF/jsp/user-profile.jsp")
+           .forward(request, response);
   }
 
   /**
@@ -77,9 +82,9 @@ public class ProfileServlet extends HttpServlet {
     try {
       // User ID starts from the string's 9th index
       if (uri.charAt(uri.length() - 1) == '/') {
-        taskId = Long.parseLong(uri.substring(9, uri.length() - 1));
+        userId = Long.parseLong(uri.substring(9, uri.length() - 1));
       } else {
-        taskId = Long.parseLong(uri.substring(9));
+        userId = Long.parseLong(uri.substring(9));
       }
     } catch (NumberFormatException nfe) {
       // Given URI does not contain parsable user ID

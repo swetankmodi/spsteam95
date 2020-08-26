@@ -51,13 +51,22 @@
 
     <div class="container userCard">
 
-      <%-- User Name --%>
       <div class="container">
         <div class="row">
 
-          <div class="col-lg-12">
+          <%-- User Name --%>
+          <div class="col-sm-11">
             <p class="userHeader"><strong>${profileUser.name}</strong></p>
           </div>
+
+          <%-- Edit profile button --%>
+          <c:if test="${isMyProfile}">
+            <div class="col-sm">
+              <button type="button" name="editProfileButton" class="btn btn-sm btn-primary">
+                <a href="/profile/edit">Edit</a>
+              </button>
+            </div>
+          </c:if>
 
         </div>
       </div>
@@ -69,7 +78,7 @@
 
         <%-- Email --%>
         <div class="row">
-          <label class="col-lg-2 flexRightRow userLabel">
+          <label class="col-lg-1 flexRightRow userLabel">
             <strong>Email</strong>
           </label>
 
@@ -80,7 +89,7 @@
 
         <%-- Phone --%>
         <div class="row">
-          <label class="col-lg-2 flexRightRow userLabel">
+          <label class="col-lg-1 flexRightRow userLabel">
             <strong>Phone</strong>
           </label>
 
@@ -91,7 +100,7 @@
 
         <%-- Rating --%>
         <div class="row">
-          <label class="col-lg-2 flexRightRow userLabel">
+          <label class="col-lg-1 flexRightRow userLabel">
             <strong>Rating</strong>
           </label>
 
@@ -118,56 +127,45 @@
 
         </div>
 
+      </div>
 
-        <c:if test="${isMyProfile}">
-          <div class="container">
-            <button type="button" name="editProfileButton" class="btn btn-primary">
-              <a href="/profile/edit">Edit Profile</a>
-            </button>
+      <c:if test="${isMyProfile}">
+        <div class="container">
+
+          <div class="row">
+
+            <div class="col-7">
+              <select id="taskType" class="form-control-sm sort-filter-options">
+                <option>Created Tasks</option>
+                <option>Completed Tasks</option>
+                <option>Assigned Tasks</option>
+              </select>
+            </div>
+
+            <div class="col form-inline">
+
+              <span class="form-control-sm sort-filter-options" style="padding-top: 6px;">Sort by </span>
+
+              <select id="taskSortOption" class="form-control-sm sort-filter-options">
+                <option>Deadline</option>
+                <option>Creation</option>
+                <option>Compensation</option>
+              </select>
+
+              <select id="taskSortDirection" class="form-control-sm sort-filter-options">
+                <option>Ascending</option>
+                <option>Descending</option>
+              </select>
+
+            </div>
+
           </div>
-        </c:if>
 
-      </div>
-    </div>
-
-
-    <div class="container">
-      <div class="row sortFilterDiv">
-
-        <h1 style="color: white">Tasks</h1>
-
-
-        <div class="col-6">
-        </div>
-
-        <div class="col form-inline">
-          <span class="form-control-sm sort-filter-options" style="padding-top: 6px;">Sort by </span>
-
-          <select id="taskType" class="form-control-sm sort-filter-options">
-            <option>Tasks Completed</option>
-            <option>Tasks Created</option>
-            <option>Tasks Assigned</option>
-          </select>
-
-          <select id="taskSortOption" class="form-control-sm sort-filter-options">
-            <option>Deadline</option>
-            <option>Creation</option>
-            <option>Compensation</option>
-          </select>
-
-          <select id="taskSortDirection" class="form-control-sm sort-filter-options">
-            <option>Ascending</option>
-            <option>Descending</option>
-          </select>
-
-
+          <div class="container taskListDiv">
+          </div>
 
         </div>
-
-      </div>
-    </div>
-
-    <div class="container taskListDiv">
+      </c:if>
     </div>
 
     <%-- Bootstrap Scripts (JQuery, popper, bootstrap) --%>
