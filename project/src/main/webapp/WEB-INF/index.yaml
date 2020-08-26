@@ -80,6 +80,19 @@ indexes:
 
 # Group
 
+- kind: Task
+  properties:
+  - name: assigneeId
+  - name: compensation
+
+- kind: Task
+  properties:
+  - name: assigneeId
+  - name: compensation
+    direction: desc
+
+# Group
+
 - kind: TaskApplicants
   properties:
   - name: taskId
@@ -161,5 +174,44 @@ indexes:
   properties:
   - name: active
   - name: creatorId
+  - name: compensation
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: assigned
+  - name: deadline
+
+- kind: Task
+  properties:
+  - name: assigned
+  - name: deadline
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: assigned
+  - name: creationTime
+
+- kind: Task
+  properties:
+  - name: assigned
+  - name: creationTime
+    direction: desc
+
+# Group
+
+- kind: Task
+  properties:
+  - name: assigned
+  - name: compensation
+
+- kind: Task
+  properties:
+  - name: assigned
   - name: compensation
     direction: desc

@@ -4,6 +4,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-image: url("/static/images/background/about.jpg");
+    background-attachment: fixed;
 }
 
 .container{

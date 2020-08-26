@@ -20,7 +20,7 @@ import javax.servlet.ServletException;
 import com.google.gson.Gson;
 
 @WebServlet("/profile/edit")
-public class EditUserDetailsServlet extends HttpServlet {
+public class ProfileEditServlet extends HttpServlet {
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 
@@ -49,6 +49,6 @@ public class EditUserDetailsServlet extends HttpServlet {
     userEntity.setProperty("phone", phone);
 
     datastore.put(userEntity);
-    response.sendRedirect("/userProfile.jsp?userId="+(userEntity.getKey().getId()));
+    response.sendRedirect("/profile/me");
   }
 }

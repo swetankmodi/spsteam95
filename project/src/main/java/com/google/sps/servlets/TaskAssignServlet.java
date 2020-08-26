@@ -3,15 +3,11 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -24,11 +20,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /** Servlet facilitating assign task. */
-@WebServlet("/task/rate")
-public class RateTaskServlet extends HttpServlet {
-  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+@WebServlet("/task/assign")
+public class TaskAssignServlet extends HttpServlet {
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    doPost(request, response);
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -37,12 +39,13 @@ public class RateTaskServlet extends HttpServlet {
       return;
 
     long assigneeId = getParameter(request, "assigneeId", -1);
-    float completionRating = Float.parseFloat(request.getParameter("rating"));
+
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       return;
     }
 
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity taskEntity;
     try{
       taskEntity = datastore.get(KeyFactory.createKey("Task", taskId));
@@ -50,11 +53,12 @@ public class RateTaskServlet extends HttpServlet {
       System.out.println(e);
       return;
     }
-    setRatingForUser(getNumberOfTasksCompleted(assigneeId), assigneeId, completionRating);
 
-    taskEntity.setProperty("completionRating", completionRating);
-    taskEntity.setProperty("active", false);
+    taskEntity.setProperty("assigneeId", assigneeId);
+    taskEntity.setProperty("assigned", true);
+
     datastore.put(taskEntity);
+
     response.sendRedirect("/task/view/" + String.valueOf(taskId));
   }
 
@@ -64,38 +68,5 @@ public class RateTaskServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
-  }
-
-  private int getNumberOfTasksCompleted(long assigneeId){
-    Query query = new Query("Task");
-    Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL, assigneeId);
-    Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, false);
-    CompositeFilter assigneeActiveFilter = CompositeFilterOperator.and(assigneeFilter, activeFilter);
-    query.setFilter(assigneeActiveFilter);
-
-    /*
-    TODO : Add another attribute to User, that tracks the number of tasks compeleted
-            by that particular User
-    */
-    int count = datastore.prepare(query).countEntities(FetchOptions.Builder.withDefaults());
-
-
-    return count;
-  }
-
-  private void setRatingForUser(int count, long assigneeId, float completionRating){
-    Entity userEntity;
-    try{
-      userEntity = datastore.get(KeyFactory.createKey("User", assigneeId));
-    }catch (Exception e) {
-      System.out.println(e);
-      return;
-    }
-
-    float currRating = Float.parseFloat(userEntity.getProperty("rating").toString());
-
-    float newRating = (currRating * count + completionRating) / (count + 1);
-    userEntity.setProperty("rating", newRating);
-    datastore.put(userEntity);
   }
 }

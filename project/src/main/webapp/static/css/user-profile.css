@@ -1,18 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap');
 
-body {
-  padding-bottom: 40px;
-}
-
-.logged-in-bg {
+.user-profile-bg {
+  background-image: url("/static/images/background/about.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("/static/images/background/home-logged-in-bg.jpg");
   background-attachment: fixed;
 }
 
-.sortFilterDiv {
-  padding: 20px 10px;
+div.userCard {
+  background-color: #3B3D40BF;
+  padding: 20px 40px 8px 2px;
+  border-radius: 5px;
+}
+
+.userLabel {
+  color: #A6A2A2;
+  font-size: 18px;
+}
+
+p.userHeader {
+  padding-left: 40px;
+  font-size: 32px;
+  color: #A4AFBDD9;
+}
+
+.userValue{
+  color: #C8C2AE;
+}
+
+.userValue:focus{
+  color: #E3D7FF;
+}
+
+.form-control{
+  background-color:#2B4141;
+  color: #C8C2AE;
+}
+
+.form-control:focus{
+  background-color:#636B61;
+  color: #E3D7FF;
 }
 
 .sort-filter-options {
@@ -26,6 +53,40 @@ body {
 .sort-filter-options option {
   background-color: #1A1A1E;
 }
+
+/* 5 star rating */
+.score {
+  display: block;
+  font-size: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.score-wrap {
+  display: inline-block;
+  position: relative;
+  height: 18px;
+}
+
+.score .stars-active {
+  color: orange;
+  position: relative;
+  z-index: 10;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.score .stars-inactive {
+  color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-text-stroke: initial;
+  overflow: hidden;
+}
+
+/* Task Node */
 
 .task-node {
   padding: 10px 20px 10px 20px;

@@ -2,6 +2,7 @@ body {
   background-image: url("/static/images/background/task-create-bg.jpg");
   background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 div.formCard {
