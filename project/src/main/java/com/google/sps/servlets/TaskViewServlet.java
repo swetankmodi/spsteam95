@@ -70,6 +70,15 @@ public class TaskViewServlet extends HttpServlet {
     }
     Task task = Task.getTaskFromDatastoreEntity(taskEntity);
 
+    if (new Date(task.getDeadlineAsLong()).before(new Date())) {
+      // If task is unassigned and past deadline and still active,
+      // deactivate it and update datastore
+      if ((!task.isAssigned()) && (task.isActive())) {
+        task.deactivate();
+        taskEntity.setProperty("active", false);
+        datastore.put(taskEntity);
+      }
+    }
 
     if (task.getCreatorId() == loggedInUser.getId()) {
       // Logged in user is the creator of the task

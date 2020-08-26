@@ -49,6 +49,6 @@ public class ProfileEditServlet extends HttpServlet {
     userEntity.setProperty("phone", phone);
 
     datastore.put(userEntity);
-    response.sendRedirect("/profile/"+(userEntity.getKey().getId()));
+    response.sendRedirect("/profile/me");
   }
 }
