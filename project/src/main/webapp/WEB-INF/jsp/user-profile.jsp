@@ -76,6 +76,9 @@
       <div class="container">
         <%-- Details --%>
 
+        <%-- Hidden user Id for JS --%>
+        <input id="profileUserId" type="number" value="${profileUser.id}" hidden>
+
         <%-- Email --%>
         <div class="row">
           <label class="col-lg-1 flexRightRow userLabel">
@@ -129,43 +132,41 @@
 
       </div>
 
-      <c:if test="${isMyProfile}">
-        <div class="container">
+      <div class="container">
 
-          <div class="row">
+        <div class="row">
 
-            <div class="col-7">
-              <select id="taskType" class="form-control-sm sort-filter-options">
-                <option>Created Tasks</option>
-                <option>Completed Tasks</option>
-                <option>Assigned Tasks</option>
-              </select>
-            </div>
-
-            <div class="col form-inline">
-
-              <span class="form-control-sm sort-filter-options" style="padding-top: 6px;">Sort by </span>
-
-              <select id="taskSortOption" class="form-control-sm sort-filter-options">
-                <option>Deadline</option>
-                <option>Creation</option>
-                <option>Compensation</option>
-              </select>
-
-              <select id="taskSortDirection" class="form-control-sm sort-filter-options">
-                <option>Ascending</option>
-                <option>Descending</option>
-              </select>
-
-            </div>
-
+          <div class="col-7">
+            <select id="taskType" class="form-control-sm sort-filter-options">
+              <option>Tasks Created</option>
+              <option>Tasks Completed</option>
+              <option>Tasks Pending</option>
+            </select>
           </div>
 
-          <div class="container taskListDiv">
+          <div class="col form-inline">
+
+            <span class="form-control-sm sort-filter-options" style="padding-top: 6px;">Sort by </span>
+
+            <select id="taskSortOption" class="form-control-sm sort-filter-options">
+              <option>Deadline</option>
+              <option>Creation</option>
+              <option>Compensation</option>
+            </select>
+
+            <select id="taskSortDirection" class="form-control-sm sort-filter-options">
+              <option>Ascending</option>
+              <option>Descending</option>
+            </select>
+
           </div>
 
         </div>
-      </c:if>
+
+        <div class="container taskListDiv">
+        </div>
+
+      </div>
     </div>
 
     <%-- Bootstrap Scripts (JQuery, popper, bootstrap) --%>

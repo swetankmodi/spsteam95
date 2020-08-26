@@ -3,15 +3,7 @@ const taskListDivClassName = "taskListDiv";
 
 var taskListCursor = null;
 var working = false;
-var userId = null;
-
-function setUserIdFromQueryParams(queryParams){
-  var len = queryParams.length;
-  if(queryParams.charAt(len - 1) == '/')
-    userId = queryParams.substring(7, len - 1);
-  else
-    userId = queryParams.substring(7, len);
-}
+var profileUserId = null;
 
 function constructTaskNode(task) {
   let deadline = new Date(task.deadline);
@@ -40,12 +32,6 @@ function loadTasks(refreshList = false) {
   if (working) return;
   working = true;
 
-  var queryParams = new URLSearchParams(window.location.search);
-  queryParams = queryParams.toString();
-  //set userId from queryParams
-  if(userId == null)
-    setUserIdFromQueryParams(queryParams);
-
   let fetchURL = '/task/completed';
   let taskList = $('div.' + taskListDivClassName);
 
@@ -55,19 +41,18 @@ function loadTasks(refreshList = false) {
     taskList.empty();
   }
 
-
   let sortOption = $('#taskSortOption').val();
   let sortDirection = $('#taskSortDirection').val();
   let taskType = $('#taskType').val();
 
-  if(taskType == 'Completed Tasks')
+  if(taskType == 'Tasks Completed')
     fetchURL = '/task/completed';
-  else if(taskType == 'Created Tasks')
+  else if(taskType == 'Tasks Created')
     fetchURL = '/task/created';
   else
     fetchURL ='/task/assigned';
 
-  $.get(fetchURL, { userId : userId,
+  $.get(fetchURL, { userId: profileUserId,
                     cursor: taskListCursor,
                     sortOption: sortOption,
                     sortDirection: sortDirection
@@ -94,6 +79,7 @@ window.addEventListener('scroll', function() {
 });
 
 $(document).ready(function(){
+  profileUserId = parseInt($('#profileUserId').val());
   loadTasks();
 
   // For Switching Sort Options
