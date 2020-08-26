@@ -70,10 +70,6 @@ public class TaskViewServlet extends HttpServlet {
     }
     Task task = Task.getTaskFromDatastoreEntity(taskEntity);
 
-    // If deadline has passed, deactivate task
-    if (new Date(task.getDeadlineAsLong()).before(new Date())) {
-      task.deactivate();
-    }
 
     if (task.getCreatorId() == loggedInUser.getId()) {
       // Logged in user is the creator of the task

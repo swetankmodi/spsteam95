@@ -3,6 +3,15 @@ const taskListDivClassName = "taskListDiv";
 
 var taskListCursor = null;
 var working = false;
+var userId = null;
+
+function setUserIdFromQueryParams(queryParams){
+  var len = queryParams.length;
+  if(queryParams.charAt(len - 1) == '/')
+    userId = queryParams.substring(7, len - 1);
+  else
+    userId = queryParams.substring(7, len);
+}
 
 function constructTaskNode(task) {
   let deadline = new Date(task.deadline);
@@ -12,7 +21,7 @@ function constructTaskNode(task) {
 
   let f = '<div class="task-node">' +
         '<div class="task-first-line">' +
-          '<a href="/task-view.html?taskId=' + task.id + '"><span class="task-title">' + task.title + '</span></a>' +
+          '<a href="/task/view/' + task.id + '"><span class="task-title">' + task.title + '</span></a>' +
           '<span class="task-compensation">&#x20B9; ' + task.compensation + '</span>' +
         '</div>' +
 
@@ -30,6 +39,13 @@ function constructTaskNode(task) {
 function loadTasks(refreshList = false) {
   if (working) return;
   working = true;
+
+  var queryParams = new URLSearchParams(window.location.search);
+  queryParams = queryParams.toString();
+  //set userId from queryParams
+  if(userId == null)
+    setUserIdFromQueryParams(queryParams);
+
   let fetchURL = '/task/completed';
   let taskList = $('div.' + taskListDivClassName);
 
@@ -38,6 +54,7 @@ function loadTasks(refreshList = false) {
     taskListCursor = null;
     taskList.empty();
   }
+
 
   let sortOption = $('#taskSortOption').val();
   let sortDirection = $('#taskSortDirection').val();
@@ -50,7 +67,8 @@ function loadTasks(refreshList = false) {
   else
     fetchURL ='/task/assigned';
 
-  $.get(fetchURL, { cursor: taskListCursor,
+  $.get(fetchURL, { userId : userId,
+                    cursor: taskListCursor,
                     sortOption: sortOption,
                     sortDirection: sortDirection
       }).done(function(response) {
