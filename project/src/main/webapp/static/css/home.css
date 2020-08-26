@@ -5,6 +5,12 @@ body {
   padding-bottom: 40px;
 }
 
+.logged-in-bg {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url("/static/images/background/home-logged-in-bg.jpg")
+}
+
 .sortFilterDiv {
   padding: 20px 10px;
 }

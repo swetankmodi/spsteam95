@@ -30,7 +30,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="/userProfile.html?userId=${loggedInUser.id}">Profile</a>
+            <a class="nav-link" href="/userProfile.jsp?userId=${loggedInUser.id}">Profile</a>
           </li>
         </ul>
 
@@ -90,7 +90,7 @@
 
           <div class="col-lg">
             <p class="taskValue" id="taskCreatedBy">
-              <a href="/userProfile.html?userId=${task.creatorId}">${creator.name}</a>
+              <a href="/userProfile.jsp?userId=${task.creatorId}">${creator.name}</a>
             </p>
           </div>
         </div>
@@ -138,7 +138,7 @@
             <c:if test="${task.isAssigned()}">
               <p class="assignmentMessage">
                 <em>The task has been assigned to
-                  <strong><a href="/userProfile.html?userId=${task.assigneeId}">${assignee.name}</a></strong>.
+                  <strong><a href="/userProfile.jsp?userId=${task.assigneeId}">${assignee.name}</a></strong>.
                 </em>
 
                 <c:if test="${isCreator}">
@@ -186,7 +186,7 @@
             <%-- State: inactive, assigned --%>
             <c:if test="${task.isAssigned()}">
               <p class="assignmentMessage">
-                <em>The task was completed by <a href="/userProfile.html?userId=${task.assigneeId}"><strong>${assignee.name}</strong></a> with a rating of <strong>${task.completionRating}</strong>.</em>
+                <em>The task was completed by <a href="/userProfile.jsp?userId=${task.assigneeId}"><strong>${assignee.name}</strong></a> with a rating of <strong>${task.completionRating}</strong>.</em>
               </p>
             </c:if>
 
@@ -207,7 +207,7 @@
 
                 <div class="card-body">
                   <div class="row">
-                    <span class="col"><a href="/userProfile.html?userId=${applicant.id}">${applicant.name}</a></span>
+                    <span class="col"><a href="/userProfile.jsp?userId=${applicant.id}">${applicant.name}</a></span>
                     <span class="score">
                   		<div class="score-wrap">
                         <span class="stars-active" style="width: ${(applicant.rating * 100) / 5}%">

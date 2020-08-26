@@ -23,6 +23,7 @@ import com.google.sps.data.User;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +35,11 @@ import javax.servlet.ServletException;
 @WebServlet(urlPatterns = {"/task/all", "/task/created", "/task/assigned", "/task/completed"})
 public class TaskListServlet extends HttpServlet {
   static final int PAGE_SIZE = 25;
+
+  /*denotes the approx time in milliseconds which takes the datastore fetch 
+        results after applying the filter and returning response to the client*/
+  static final int OFF_SET = 100; 
+
   private final DatastoreService datastore;
 
   public TaskListServlet() {
@@ -57,11 +63,22 @@ public class TaskListServlet extends HttpServlet {
     // Add required sort
     String sortOptionString = getParameter(request, "sortOption", "Deadline");
     String sortDirectionString = getParameter(request, "sortDirection", "Descending");
+    Long userId = -1L;
+    if(!uriInfo.equals("/task/all"))
+      userId = getParameter(request, "userId", -1L);
+    
     SortDirection sortDirection;
     if (sortDirectionString.equals("Ascending")) {
       sortDirection = SortDirection.ASCENDING;
     } else {
       sortDirection = SortDirection.DESCENDING;
+    }
+
+
+    // If this servlet is passed a cursor parameter, use it.
+    String startCursor = request.getParameter("cursor");
+    if (startCursor != null) {
+      fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
     }
 
     if (sortOptionString.equals("Creation")) {
@@ -72,40 +89,42 @@ public class TaskListServlet extends HttpServlet {
       query.addSort("deadline", sortDirection);
     }
 
-    // If this servlet is passed a cursor parameter, use it.
-    String startCursor = request.getParameter("cursor");
-    if (startCursor != null) {
-      fetchOptions.startCursor(Cursor.fromWebSafeString(startCursor));
-    }
 
-    // Add filters based on URI (created, assigned, completed)
-    if (uriInfo.equals("/task/created")) {
+    // Add active filters
+    boolean filterActive = getParameter(request, "filterActive", false);
+    if (uriInfo.equals("/task/all")) {
+      // assigned = false and deadline has not passed
+      if(filterActive){
+        Filter isAssignedFilter = new FilterPredicate("assigned",
+            Query.FilterOperator.EQUAL, false);
+        query.setFilter(isAssignedFilter);
+      }
+    } else if (uriInfo.equals("/task/created")) {
       // set filters for created tasks
-      User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
-
-      Filter creatorFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());
-      query.setFilter(creatorFilter);
+      Filter uriFilter = new FilterPredicate("creatorId", FilterOperator.EQUAL,
+                                                 userId);
+      query.setFilter(uriFilter);
     } else if (uriInfo.equals("/task/assigned")) {
       // set filters for assigned tasks
-      User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
-
-      Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());                               
-      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, true);
-      CompositeFilter activeAssigneeFilter = CompositeFilterOperator.and(activeFilter, assigneeFilter);
-      query.setFilter(activeAssigneeFilter);
-    } else if (uriInfo.equals("/task/completed")) {
+      Filter uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
+                                                 userId);
+      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL,
+                                                  true);
+      Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
+          Arrays.<Filter>asList(uriFilter, activeFilter));
+      query.setFilter(compositeFilter);
+    } else {
       // set filters for completed tasks
-      User loggedInUser = User.getUserFromEmail(userService.getCurrentUser().getEmail());
-
-      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL, false);
-      Filter assigneeFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
-                                                 loggedInUser.getId());
-      
-      CompositeFilter activeAssigneeFilter = CompositeFilterOperator.and(activeFilter, assigneeFilter);
-      query.setFilter(activeAssigneeFilter);
+      Filter uriFilter = new FilterPredicate("assigneeId", FilterOperator.EQUAL,
+                                                 userId);
+      Filter activeFilter = new FilterPredicate("active", FilterOperator.EQUAL,
+                                                  false);
+      Filter compositeFilter = new CompositeFilter(CompositeFilterOperator.AND,
+          Arrays.<Filter>asList(uriFilter, activeFilter));
+      query.setFilter(compositeFilter);
     }
+
+    
 
     // Query the Datastore for the required tasks
     QueryResultList<Entity> results;
@@ -119,6 +138,11 @@ public class TaskListServlet extends HttpServlet {
     List<Task> tasks = new ArrayList<>();
     for (Entity entity : results) {
       Task task = Task.getTaskFromDatastoreEntity(entity);
+
+      // If deadline has passed and the active filter is not applied on the home page
+      if(task.getDeadlineAsLong() < System.currentTimeMillis() + OFF_SET && 
+        filterActive)
+        continue;
       tasks.add(task);
     }
 
@@ -151,6 +175,22 @@ public class TaskListServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
+  }
+
+  private boolean getParameter(HttpServletRequest request, String name, boolean defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return Boolean.parseBoolean(value);
+  }
+
+  private Long getParameter(HttpServletRequest request, String name, Long defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return Long.parseLong(value);
   }
 
 }

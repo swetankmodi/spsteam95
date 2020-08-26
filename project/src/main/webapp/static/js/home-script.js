@@ -28,6 +28,9 @@ function constructTaskNode(task) {
  * Function to load tasks.
  */
 function loadTasks(refreshList = false) {
+  if (working) return;
+  working = true;
+
   let fetchURL = '/task/all';
   let taskList = $('div.' + taskListDivClassName);
 
@@ -39,11 +42,18 @@ function loadTasks(refreshList = false) {
 
   let sortOption = $('#taskSortOption').val();
   let sortDirection = $('#taskSortDirection').val();
+  let filterActive = $('#taskFilterActive').prop('checked');
 
   $.get(fetchURL, { cursor: taskListCursor,
                     sortOption: sortOption,
-                    sortDirection: sortDirection
+                    sortDirection: sortDirection,
+                    filterActive: filterActive
       }).done(function(response) {
+
+    if (refreshList) {
+      // Clear again as any parallel request might have populated the list again
+      taskList.empty()
+    }
 
     // Append Tasks to list
     for (task of response.tasks) {
@@ -61,10 +71,7 @@ function loadTasks(refreshList = false) {
 window.addEventListener('scroll', function() {
   if (document.documentElement.scrollTop + document.documentElement.clientHeight
       >= document.documentElement.scrollHeight) {
-    if (working === false) {
-      working = true;
-      loadTasks();
-    }
+    loadTasks();
   }
 });
 
@@ -78,6 +85,11 @@ $(document).ready(function(){
 
   // For Switching Sort Directions
   $('#taskSortDirection').on('change',function(){
+    loadTasks(true);
+  });
+
+  // For Switching Active Filter
+  $('#taskFilterActive').on('change',function(){
     loadTasks(true);
   });
 
