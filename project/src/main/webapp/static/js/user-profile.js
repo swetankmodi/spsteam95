@@ -15,34 +15,11 @@ function addProfileDetailsToDOM() {
     var phone = response.user.phone;
     var rating = response.user.rating;
 
-    const profileUrl = document.getElementById('profile-url');
-    profileUrl.innerHTML = '<a class="nav-link" href="/userProfile.jsp?userId=' + response.loggedInUserId + '">Profile</a>';
-    const logoutButton = document.getElementById('logout-button');
-    logoutButton.innerHTML = '<a class="btn btn-sm btn-outline-danger" href="' + response.userLogoutUrl + '">Logout</a>';
-
-    document.getElementById('userName').innerHTML = name;
-    document.getElementById('userEmail').innerHTML = email;
-    document.getElementById('userPhone').innerHTML = phone;
-    document.getElementById('userRating').innerHTML = rating;
-
     if(response.canEditProfile){
       addEditProfileButtonToDom();
     }
   })
-} 
-
-function addEditProfileButtonToDom(){
-  var editProfileContainer = document.getElementById('edit-profile');
-  var editButton = document.createElement('button');
-  editButton.className = "btn btn-success";
-  
-  editButton.innerHTML = "Edit profile";
-  editButton.onclick = function() {
-    window.location = '/profile/edit';
-  }
-  editProfileContainer.append(editButton);
 }
-
 
 function constructTaskNode(task) {
   let deadline = new Date(task.deadline);
@@ -83,14 +60,14 @@ function loadTasks(refreshList = false) {
   let sortOption = $('#taskSortOption').val();
   let sortDirection = $('#taskSortDirection').val();
   let taskType = $('#taskType').val();
-  
+
   if(taskType == 'Tasks Completed')
     fetchURL = '/task/completed';
   else if(taskType == 'Tasks Created')
     fetchURL = '/task/created';
   else
     fetchURL ='/task/assigned';
-  
+
   $.get(fetchURL, { cursor: taskListCursor,
                     sortOption: sortOption,
                     sortDirection: sortDirection

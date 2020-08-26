@@ -128,7 +128,6 @@ public class TaskViewServlet extends HttpServlet {
     }
 
     request.setAttribute("task", task);
-    request.setAttribute("loggedInUser", loggedInUser);
     request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
 
     // Dispatch request to Task View

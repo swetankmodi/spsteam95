@@ -1,8 +1,8 @@
-body {
+.user-profile-bg {
+  background-image: url("/static/images/background/about.jpg") !important;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("/static/images/background/about.jpg") !important;  
-} 
+}
 
 div.userCard {
   background-color: #472d309e;
@@ -12,11 +12,6 @@ div.userCard {
 
 .userLabel {
   color: #A6A2A2;
-  font-size: 18px;
-}
-
-small.formPlaintext {
-  color: #EFE4D9;
   font-size: 18px;
 }
 
@@ -42,11 +37,4 @@ p.userHeader {
 .form-control:focus{
   background-color:#636B61;
   color: #E3D7FF;
-}
-
-::placeholder {
-  color: rgba(185, 216, 194, 0.4) !important;
-}
-h1 { 
-  color: #00fff2; 
 }

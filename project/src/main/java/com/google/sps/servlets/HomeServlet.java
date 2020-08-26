@@ -53,7 +53,6 @@ public class HomeServlet extends HttpServlet {
 
       //If the current user is fully registered
       request.setAttribute("isLoggedIn", true);
-      request.setAttribute("loggedInUser", loggedInUser);
       request.setAttribute("userLogoutUrl", userService.createLogoutURL("/"));
     }
 

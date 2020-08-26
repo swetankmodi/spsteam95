@@ -1,7 +1,7 @@
 <%@page language="java" contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
 
   <head>
     <meta charset="UTF-8">
@@ -36,7 +36,7 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="/userProfile.jsp?userId=${loggedInUser.id}">Profile</a>
+              <a class="nav-link" href="/profile/me">Profile</a>
             </li>
 
           </c:if>
